@@ -150,7 +150,7 @@ VUE_APP_API_URL=http://localhost:8080
 Inicie o servidor de desenvolvimento com o seguinte comando:
 
 ```bash
-npm run serve
+npm run dev
 ```
 
 A aplicação estará disponível em `http://localhost:8080`.
@@ -190,5 +190,4 @@ Contribuições são bem-vindas! Siga os passos abaixo para contribuir com o pro
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE.md) para mais informações.
-
+Este projeto está licenciado sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais informações.
