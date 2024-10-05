@@ -3,9 +3,9 @@ import AddNewUserDrawer from "@/views/utilizadores/list/AddNewUserDrawer.vue";
 
 // 👉 Store
 const searchQuery = ref("");
-const selectedRole = ref(null);
-const selectedPlan = ref(null);
-const selectedStatus = ref(null);
+const selectedRole = ref();
+const selectedPlan = ref();
+const selectedStatus = ref();
 
 // Data table options
 const itemsPerPage = ref(5);
@@ -14,11 +14,7 @@ const sortBy = ref();
 const orderBy = ref();
 const selectedRows = ref([]);
 const utilizadores = ref([]);
-const filteredUtilizadores = ref([]); // Utilizadores filtrados
 const total_users = ref(0);
-const total_estudantes = ref(0);
-const total_professores = ref(0);
-const total_funcionarios = ref(0);
 const token = useCookie("accessToken").value;
 
 const updateOptions = (options) => {
@@ -38,24 +34,92 @@ const headers = [
 
 // 👉 search filters
 const roles = [
-  { title: "ROLE_ESTUDANTE", value: "ROLE_ESTUDANTE" },
-  { title: "Professor", value: "ROLE_PROFESSOR" },
-  { title: "Pegagogico", value: "ROLE_PEDAGOGICO" },
-  { title: "Financeiro", value: "ROLE_FINANCEIRO" },
-  { title: "Encarregado", value: "ROLE_encarregado" },
+  {
+    title: "Estudante",
+    value: "ROLE_ESTUDANTE",
+  },
+  {
+    title: "Professor",
+    value: "ROLE_PROFESSOR",
+  },
+  {
+    title: "Pegagogico",
+    value: "ROLE_PEDAGOGICO",
+  },
+  {
+    title: "Financeiro",
+    value: "ROLE_FINANCEIRO",
+  },
+  {
+    title: "Encarregado",
+    value: "ROLE_encarregado",
+  },
 ];
 
 const sexo = [
-  { title: "Masculino", value: "m" },
-  { title: "Feminino", value: "f" },
+  {
+    title: "Masuclino",
+    value: "m",
+  },
+  {
+    title: "Feminino",
+    value: "f",
+  },
 ];
 
 const estado = [
-  { title: "Pending", value: "Pending" },
-  { title: "Activo", value: "Active" },
-  { title: "Desactivado", value: "Inactive" },
+  {
+    title: "Pending",
+    value: "Pending",
+  },
+  {
+    title: "Activo",
+    value: "Active",
+  },
+  {
+    title: "Desactivado",
+    value: "Inactive",
+  },
 ];
 
+const resolveUserRoleVariant = (role) => {
+  const roleLowerCase = role.toLowerCase();
+  if (roleLowerCase === "role_estudante")
+    return {
+      color: "success",
+      icon: "ri-user-line",
+    };
+  if (roleLowerCase === "role_professor")
+    return {
+      color: "error",
+      icon: "ri-computer-line",
+    };
+  if (roleLowerCase === "role_pedagogico")
+    return {
+      color: "info",
+      icon: "ri-pie-chart-line",
+    };
+  if (roleLowerCase === "role_financeiro")
+    return {
+      color: "warning",
+      icon: "ri-edit-box-line",
+    };
+  if (roleLowerCase === "role_encarregado")
+    return {
+      color: "primary",
+      icon: "ri-vip-crown-line",
+    };
+
+  return {
+    color: "success",
+    icon: "ri-user-line",
+  };
+};
+
+const atualizarDados = () => {
+  fetchUsers();
+  totalUsers();
+};
 // Função para buscar utilizadores da API
 const fetchUsers = async () => {
   try {
@@ -72,33 +136,12 @@ const fetchUsers = async () => {
       username: user.username,
       email: user.email,
       roles: user.role,
-      status: user.status,  // Adicionei status
-      sexo: user.sexo       // Adicionei sexo
     }));
-
-    filterUsers();  // Aplicar filtros automaticamente
   } catch (err) {
     console.error("Erro ao buscar utilizadores:", err);
   }
 };
 
-// Função para filtrar os utilizadores com base nos filtros aplicados
-const filterUsers = () => {
-  filteredUtilizadores.value = utilizadores.value.filter((user) => {
-    const matchesSearch = user.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesRole = !selectedRole.value || user.roles.includes(selectedRole.value);
-    const matchesStatus = !selectedStatus.value || user.status === selectedStatus.value;
-    const matchesSexo = !selectedPlan.value || user.sexo === selectedPlan.value;
-
-    return matchesSearch && matchesRole && matchesStatus && matchesSexo;
-  });
-};
-
-// Observers para aplicar os filtros sempre que um valor mudar
-watch([searchQuery, selectedRole, selectedPlan, selectedStatus], filterUsers);
-
-// Função para obter o total de utilizadores
 const totalUsers = async () => {
   try {
     const res = await $api("/utilizadores/totais", {
@@ -114,66 +157,32 @@ const totalUsers = async () => {
   }
 };
 
-// Função para atualizar os dados ao recarregar
-const atualizarDados = () => {
-  fetchUsers();
-  totalUsers();
+const resolveUserStatusVariant = (stat) => {
+  const statLowerCase = stat.toLowerCase();
+  if (statLowerCase === "pending") return "warning";
+  if (statLowerCase === "active") return "success";
+  if (statLowerCase === "inactive") return "secondary";
+
+  return "primary";
 };
 
-// Função para remover um utilizador
+
+
+
+
 const deleteUser = async (id) => {
   await $api(`/utilizadores/remover/${id}`, { method: "DELETE" });
 
+  // Delete from selectedRows
   const index = selectedRows.value.findIndex((row) => row === id);
   if (index !== -1) selectedRows.value.splice(index, 1);
-
-  fetchUsers();
-};
-
-const widgetData = ref([
-  {
-    title: "Usuarios Cadastrados",
-    value: total_users,
-    desc: "Todos Utilizadores do Sistema",
-    icon: "ri-group-line",
-    iconColor: "primary",
-  },
-  {
-    title: "Estudantes",
-    value: total_estudantes,
-    desc: "Estudantes Cadastrados",
-    icon: "ri-user-add-line",
-    iconColor: "error",
-  },
-  {
-    title: "Professores",
-    value: total_professores,
-    desc: "Membros do corpo docente",
-    icon: "ri-user-follow-line",
-    iconColor: "success",
-  },
-  {
-    title: "Funcionarios",
-    value: total_funcionarios,
-    desc: "Outros Funcionarios da Escole",
-    icon: "ri-user-search-line",
-    iconColor: "warning",
-  },
-]);
-
-const isCadastrarUserVisible = ref(false);
-
-const cadastrarUtilizador = async (userData) => {
-  // userListStore.addUser(userData)
-  await $api("/autenticacao/cadastro", {
-    method: "POST",
-    body: userData,
-  });
 
   // Refetch User
   fetchUsers();
 };
-// Inicializar dados
+
+
+
 atualizarDados();
 </script>
 
@@ -188,11 +197,23 @@ atualizarDados();
               <VCardText>
                 <div class="d-flex justify-space-between">
                   <div class="d-flex flex-column gap-y-1">
-                    <span class="text-base text-high-emphasis">{{ data.title }}</span>
-                    <h4 class="text-h4 d-flex align-center gap-2">{{ data.value }}</h4>
-                    <p class="text-sm mb-0">{{ data.desc }}</p>
+                    <span class="text-base text-high-emphasis">{{
+                      data.title
+                    }}</span>
+                    <h4 class="text-h4 d-flex align-center gap-2">
+                      {{ data.value }}
+                    </h4>
+
+                    <p class="text-sm mb-0">
+                      {{ data.desc }}
+                    </p>
                   </div>
-                  <VAvatar :color="data.iconColor" variant="tonal" rounded size="42">
+                  <VAvatar
+                    :color="data.iconColor"
+                    variant="tonal"
+                    rounded
+                    size="42"
+                  >
                     <VIcon :icon="data.icon" size="26" />
                   </VAvatar>
                 </div>
@@ -203,24 +224,44 @@ atualizarDados();
       </VRow>
     </div>
 
-    <!-- Filtros -->
     <VCard class="mb-6">
       <VCardItem class="pb-4">
         <VCardTitle>Filtrar utilizadores</VCardTitle>
       </VCardItem>
       <VCardText>
         <VRow>
-          <!-- Select Role -->
+          <!-- 👉 Select Role -->
           <VCol cols="12" sm="4">
-            <VSelect v-model="selectedRole" label="Seleccionar o tipo de Utilizador" placeholder="Seleccionar tipo de Utilizador" :items="roles" clearable clear-icon="ri-close-line" />
+            <VSelect
+              v-model="selectedRole"
+              label="Seleccionar o tipo de Utilizador"
+              placeholder="Seleccionar tipo de Utilizador"
+              :items="roles"
+              clearable
+              clear-icon="ri-close-line"
+            />
           </VCol>
-          <!-- Select Sexo -->
+          <!-- 👉 Select Plan -->
           <VCol cols="12" sm="4">
-            <VSelect v-model="selectedPlan" label="Selecionar Sexo" placeholder="Escolher Sexo" :items="sexo" clearable clear-icon="ri-close-line" />
+            <VSelect
+              v-model="selectedPlan"
+              label="Selecccionar sexo"
+              placeholder="Escolher Sexo"
+              :items="sexo"
+              clearable
+              clear-icon="ri-close-line"
+            />
           </VCol>
-          <!-- Select Status -->
+          <!-- 👉 Select Status -->
           <VCol cols="12" sm="4">
-            <VSelect v-model="selectedStatus" label="Seleccionar estado" placeholder="Seleccionar estado" :items="estado" clearable clear-icon="ri-close-line" />
+            <VSelect
+              v-model="selectedStatus"
+              label="Seleccionar estado"
+              placeholder="Seleccionar estado"
+              :items="estado"
+              clearable
+              clear-icon="ri-close-line"
+            />
           </VCol>
         </VRow>
       </VCardText>
@@ -228,32 +269,45 @@ atualizarDados();
       <VDivider />
 
       <VCardText class="d-flex flex-wrap gap-4 align-center">
-        <VBtn variant="outlined" color="secondary" prepend-icon="ri-download-2-line" @click="atualizarDados()">Recarregar Dados</VBtn>
+        <!-- 👉 Export button -->
+        <VBtn
+          variant="outlined"
+          color="secondary"
+          prepend-icon="ri-download-2-line"
+          @click="atualizarDados()"
+        >
+          Recarregar Dados
+        </VBtn>
         <VSpacer />
         <div class="d-flex align-center gap-4 flex-wrap">
-          <!-- Search -->
+          <!-- 👉 Search  -->
           <div class="app-user-search-filter">
-            <VTextField v-model="searchQuery" placeholder="Buscar utilizador" density="compact" />
+            <VTextField
+              v-model="searchQuery"
+              placeholder="Buscar utilizador"
+              density="compact"
+            />
           </div>
-          <!-- Add User Button -->
-          <VBtn @click="isCadastrarUserVisible = true">Cadastrar Utilizador</VBtn>
+          <!-- 👉 Add user button -->
+          <VBtn @click="isCadastrarUserVisible = true"
+            >Cadastrar Utilizador</VBtn
+          >
         </div>
       </VCardText>
 
-      <!-- DataTable -->
+      <!-- SECTION datatable -->
       <VDataTableServer
         v-model:model-value="selectedRows"
         v-model:items-per-page="itemsPerPage"
         v-model:page="page"
-        :items="filteredUtilizadores"
+        :items="utilizadores"
         item-value="id"
-        :items-length="filteredUtilizadores.length"
+        :items-length="utilizadores.length"
         :headers="headers"
         show-select
         class="text-no-wrap rounded-0"
         @update:options="updateOptions"
       >
-        <!-- Colunas Personalizadas -->
         <template #item.nome="{ item }">
           <div class="d-flex flex-column">
             <span>{{ item.nome }}</span>
@@ -272,6 +326,7 @@ atualizarDados();
           </div>
         </template>
 
+        <!-- Exibir Roles -->
         <template #item.roles="{ item }">
           <VChip v-for="(role, index) in item.roles" :key="index">
             {{ role.name }}
@@ -283,12 +338,19 @@ atualizarDados();
           <IconBtn size="small" @click="deleteUser(item.id)">
             <VIcon icon="ri-delete-bin-7-line" />
           </IconBtn>
+          <IconBtn size="small" @click="deleteUser(item.id)">
+            <VIcon icon="ri-delete-bin-7-line" />
+          </IconBtn>
         </template>
       </VDataTableServer>
-    </VCard>
 
-    <!-- Add New User Drawer -->
-    <AddNewUserDrawer v-model:isDrawerOpen="isCadastrarUserVisible" @user-data="cadastrarUtilizador" />
+      <!-- SECTION -->
+    </VCard>
+    <!-- 👉 Add New User -->
+    <AddNewUserDrawer
+      v-model:isDrawerOpen="isCadastrarUserVisible"
+      @user-data="cadastrarUtilizador"
+    />
   </section>
 </template>
 

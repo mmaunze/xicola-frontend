@@ -25,6 +25,8 @@ declare module 'vue-router/auto-routes' {
     'not-authorized': RouteRecordInfo<'not-authorized', '/not-authorized', Record<never, never>, Record<never, never>>,
     'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
     'utilizadores': RouteRecordInfo<'utilizadores', '/utilizadores', Record<never, never>, Record<never, never>>,
+    'utilizadores-estudantes': RouteRecordInfo<'utilizadores-estudantes', '/utilizadores/estudantes', Record<never, never>, Record<never, never>>,
+    'utilizadores-ts': RouteRecordInfo<'utilizadores-ts', '/utilizadores/ts', Record<never, never>, Record<never, never>>,
     'utilizadores-view-id': RouteRecordInfo<'utilizadores-view-id', '/utilizadores/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }
