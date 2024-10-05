@@ -7,6 +7,11 @@ const selectedRole = ref(null);
 const selectedPlan = ref(null);
 const selectedStatus = ref(null);
 
+const snackbar = ref(false); // Controla a visibilidade da snackbar
+const snackbarMessage = ref(""); // Armazena a mensagem a ser exibida
+const snackbarColor = ref("success"); // Controla a cor da snackbar (success, error, etc.)
+
+
 // Data table options
 const itemsPerPage = ref(5);
 const page = ref(1);
@@ -170,6 +175,10 @@ const cadastrarUtilizador = async (userData) => {
     body: userData,
   });
 
+  snackbarMessage.value = "Utilizador cadastrado com sucesso!";
+    snackbarColor.value = "success";
+    snackbar.value = true;
+
   // Refetch User
   fetchUsers();
 };
@@ -179,7 +188,19 @@ atualizarDados();
 
 <template>
   <section>
-    <!-- 👉 Widgets -->
+    <VSnackbar
+    v-model="snackbar"
+    color="snackbarColor"
+    timeout="3000" <!-- Duração da notificação em milissegundos -->
+    top
+    multi-line
+    vertical
+  >
+    {{ snackbarMessage }}
+    <template #action>
+      <VBtn color="white" text @click="snackbar = false">Fechar</VBtn>
+    </template>
+  </VSnackbar>
     <div class="d-flex mb-6">
       <VRow>
         <template v-for="(data, id) in widgetData" :key="id">
