@@ -333,12 +333,14 @@ atualizarDados();
       >
         
         <template #item.actions="{ item }">
-          <VBtn
-            icon="ri-eye-line"
-            :icon-color="success"
-            variant="plain"
-            @click="isCadastrarAlunoVisible = true"
-          />
+          
+          <IconBtn
+            size="small"
+            :to="{ name: 'utilizadores-estudantes-view-id', params: { id: item.id } }"
+          >
+            <VIcon icon="ri-eye-line" />
+          </IconBtn>
+
           <VBtn
             icon="ri-edit-2-line"
             :icon-color="success"

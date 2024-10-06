@@ -26,6 +26,7 @@ declare module 'vue-router/auto-routes' {
     'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
     'utilizadores': RouteRecordInfo<'utilizadores', '/utilizadores', Record<never, never>, Record<never, never>>,
     'utilizadores-estudantes': RouteRecordInfo<'utilizadores-estudantes', '/utilizadores/estudantes', Record<never, never>, Record<never, never>>,
+    'utilizadores-estudantes-view-id': RouteRecordInfo<'utilizadores-estudantes-view-id', '/utilizadores/estudantes/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-view-id': RouteRecordInfo<'utilizadores-view-id', '/utilizadores/view/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }

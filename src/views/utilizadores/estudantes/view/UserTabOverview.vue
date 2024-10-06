@@ -111,11 +111,11 @@ const search = ref('')
       <VCard>
         <VCardItem>
           <div class="d-flex justify-space-between align-center flex-wrap gap-4">
-            <VCardTitle>Lista de Encarregados do Aluno</VCardTitle>
+            <VCardTitle>Project List</VCardTitle>
             <div style="inline-size: 15.625rem;">
               <VTextField
                 v-model="search"
-                placeholder="Pesquisar npme do Eccarregados do Aluno"
+                placeholder="Search Project"
                 density="compact"
                 style="inline-size: 15.625rem;"
               />
