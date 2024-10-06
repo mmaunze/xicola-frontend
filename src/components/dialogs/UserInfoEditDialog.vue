@@ -5,20 +5,21 @@ const props = defineProps({
     required: false,
     default: () => ({
       avatar: '',
-      company: '',
-      contact: '',
-      country: null,
-      currentPlan: '',
-      email: '',
-      fullName: '',
-      id: 0,
-      role: '',
-      status: null,
-      username: '',
-      language: [],
-      projectDone: 0,
-      taskDone: 0,
-      taxId: '',
+      nomeCompleto: '',
+      dataNascimento: '',
+      distritoNascimento: '',
+      provinciaNascimento: '',
+      nomeDoPai: '',
+      nomeDaMae: '',
+      religiao: '',
+      grupoSanguineo: '',
+      endereco: '',
+      dataRegisto: '',
+      escolaAnterior: '',
+      bilheteIdentificacao: '',
+      numeroTelefonePrincipal: '',
+      sexo: '',
+      estado: '',
     }),
   },
   isDialogVisible: {
@@ -55,12 +56,12 @@ const dialogVisibleUpdate = val => {
 
 <template>
   <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900 "
+    :width="$vuetify.display.smAndDown ? 'auto' : 900"
     :model-value="props.isDialogVisible"
     @update:model-value="dialogVisibleUpdate"
   >
     <VCard class="pa-sm-11 pa-3">
-      <!-- 👉 dialog close btn -->
+      <!-- Dialog close button -->
       <DialogCloseBtn
         variant="text"
         size="default"
@@ -70,146 +71,163 @@ const dialogVisibleUpdate = val => {
       <VCardText class="pt-5">
         <div class="text-center pb-6">
           <h4 class="text-h4 mb-2">
-            Edit User Information
+            Editar Informações do Aluno
           </h4>
           <div class="text-body-1">
-            Updating user details will receive a privacy audit.
+            As actualizações nas informações do aluno serão auditadas.
           </div>
         </div>
 
-        <!-- 👉 Form -->
+        <!-- Form -->
         <VForm
           class="mt-4"
           @submit.prevent="onFormSubmit"
         >
           <VRow>
-            <!-- 👉 First Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <VTextField
-                v-model="userData.fullName.split(' ')[0]"
-                label="First Name"
-                placeholder="John"
-              />
-            </VCol>
-
-            <!-- 👉 Last Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <VTextField
-                v-model="userData.fullName.split(' ')[1]"
-                label="Last Name"
-                placeholder="doe"
-              />
-            </VCol>
-
-            <!-- 👉 User Name  -->
-
+            <!-- Nome Completo -->
             <VCol cols="12">
               <VTextField
-                v-model="userData.username"
-                label="Username"
-                placeholder="John Doe"
+                v-model="userData.nomeCompleto"
+                label="Nome Completo"
+                placeholder="Ex: João Silva"
               />
             </VCol>
 
-            <!-- 👉 Billing Email -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <!-- Data de Nascimento -->
+            <VCol cols="12" md="6">
               <VTextField
-                v-model="userData.email"
-                label="Billing Email"
-                placeholder="johndoe@email.com"
+                v-model="userData.dataNascimento"
+                label="Data de Nascimento"
+                placeholder="Ex: 01/01/2000"
               />
             </VCol>
 
-            <!-- 👉 Status -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <!-- Sexo -->
+            <VCol cols="12" md="6">
               <VSelect
-                v-model="userData.status"
-                :items="['Active', 'Inactive', 'Pending']"
-                label="Status"
-                placeholder="Status"
+                v-model="userData.sexo"
+                :items="['Masculino', 'Feminino']"
+                label="Sexo"
+                placeholder="Selecione o sexo"
               />
             </VCol>
 
-            <!-- 👉 Tax Id -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <!-- Nome do Pai -->
+            <VCol cols="12" md="6">
               <VTextField
-                v-model="userData.taxId"
-                label="Tax Id"
-                placeholder="Tax-3456789"
+                v-model="userData.nomeDoPai"
+                label="Nome do Pai"
+                placeholder="Ex: José Silva"
               />
             </VCol>
 
-            <!-- 👉 Contact -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <!-- Nome da Mãe -->
+            <VCol cols="12" md="6">
               <VTextField
-                v-model="userData.contact"
-                label="Contact"
-                placeholder="+1 9876543210"
+                v-model="userData.nomeDaMae"
+                label="Nome da Mãe"
+                placeholder="Ex: Maria Silva"
               />
             </VCol>
 
-            <!-- 👉 Language -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <VSelect
-                v-model="userData.language"
-                :items="['English', 'Spanish', 'French']"
-                label="Language"
-                placeholder="English"
-                chips
-                closable-chips
-                multiple
+            <!-- Distrito de Nascimento -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.distritoNascimento"
+                label="Distrito de Nascimento"
+                placeholder="Ex: Lisboa"
               />
             </VCol>
 
-            <!-- 👉 Country -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <VSelect
-                v-model="userData.country"
-                :items="['United States', 'United Kingdom', 'France']"
-                label="Country"
-                placeholder="United States"
+            <!-- Província de Nascimento -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.provinciaNascimento"
+                label="Província de Nascimento"
+                placeholder="Ex: Lisboa"
               />
             </VCol>
 
-            <!-- 👉 Switch -->
+            <!-- Grupo Sanguíneo -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.grupoSanguineo"
+                label="Grupo Sanguíneo"
+                placeholder="Ex: O+"
+              />
+            </VCol>
+
+            <!-- Religião -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.religiao"
+                label="Religião"
+                placeholder="Ex: Católica"
+              />
+            </VCol>
+
+            <!-- Bilhete de Identificação -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.bilheteIdentificacao"
+                label="Bilhete de Identificação"
+                placeholder="Ex: 123456789"
+              />
+            </VCol>
+
+            <!-- Número de Telefone -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.numeroTelefonePrincipal"
+                label="Número de Telefone"
+                placeholder="Ex: +351 912345678"
+              />
+            </VCol>
+
+            <!-- Endereço -->
             <VCol cols="12">
-              <VSwitch
-                density="compact"
-                label="Use as a billing address?"
+              <VTextField
+                v-model="userData.endereco"
+                label="Endereço"
+                placeholder="Ex: Rua ABC, 123, Lisboa"
               />
             </VCol>
 
-            <!-- 👉 Submit and Cancel -->
+            <!-- Escola Anterior -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.escolaAnterior"
+                label="Escola Anterior"
+                placeholder="Ex: Escola Secundária ABC"
+              />
+            </VCol>
+
+            <!-- Data de Registo -->
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.dataRegisto"
+                label="Data de Registo"
+                placeholder="Ex: 01/09/2020"
+              />
+            </VCol>
+
+            <!-- Estado -->
+            <VCol cols="12" md="6">
+              <VSelect
+                v-model="userData.estado"
+                :items="['Activo', 'Inactivo', 'Expulso']"
+                label="Estado"
+                placeholder="Estado actual"
+              />
+            </VCol>
+
+            <!-- Submit and Cancel -->
             <VCol
               cols="12"
               class="d-flex flex-wrap justify-center gap-4"
             >
               <VBtn type="submit">
-                Submit
+                Submeter
               </VBtn>
 
               <VBtn
@@ -217,7 +235,7 @@ const dialogVisibleUpdate = val => {
                 variant="outlined"
                 @click="onFormReset"
               >
-                Cancel
+                Cancelar
               </VBtn>
             </VCol>
           </VRow>

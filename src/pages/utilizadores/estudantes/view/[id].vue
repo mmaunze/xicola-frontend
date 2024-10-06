@@ -1,67 +1,77 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import UserBioPanel from '@/views/utilizadores/estudantes/view/UserBioPanel.vue'
-import UserTabBillingsPlans from '@/views/utilizadores/estudantes/view/UserTabBillingsPlans.vue'
-import UserTabConnections from '@/views/utilizadores/estudantes/view/UserTabConnections.vue'
-import UserTabNotifications from '@/views/utilizadores/estudantes/view/UserTabNotifications.vue'
-import UserTabOverview from '@/views/utilizadores/estudantes/view/UserTabOverview.vue'
-import UserTabSecurity from '@/views/utilizadores/estudantes/view/UserTabSecurity.vue'
+import { ref, onMounted } from "vue";
+import Sobre from "@/views/utilizadores/estudantes/view/Sobre.vue";
+import Frequencia from "@/views/utilizadores/estudantes/view/Frequencia.vue";
+import Mensalidades from "@/views/utilizadores/estudantes/view/Mensalidades.vue";
+import Documentacao from "@/views/utilizadores/estudantes/view/Documentacao.vue";
+import Actividades from "@/views/utilizadores/estudantes/view/Actividades.vue";
+import InformacaoFamilia from "@/views/utilizadores/estudantes/view/InformacaoFamilia.vue";
+import HistoricoAcademico from "@/views/utilizadores/estudantes/view/HistoricoAcademico.vue";
 
-const route = useRoute('utilizadores-estudantes-view-id') // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
-const userTab = ref(null)
-const userData = ref(null) // Para armazenar os dados do aluno
-const token = 'seu_token_aqui' // Certifique-se de definir o token corretamente
+const route = useRoute("utilizadores-estudantes-view-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
+const userTab = ref(null);
+const userData = ref(null); // Para armazenar os dados do aluno
+const token = "seu_token_aqui"; // Certifique-se de definir o token corretamente
 
 const tabs = [
-
-{
-    icon: 'ri-group-line',
-    title: 'Informações da Família',
-    content: 'Informações sobre os pais ou responsáveis, contacto de emergência e dados relacionados.',
+  {
+    icon: "ri-coin-line",
+    title: "Mensalidades",
+    content:
+      "Informações sobre os pais ou responsáveis, contacto de emergência e dados relacionados.",
   },
 
   {
-    icon: 'ri-book-line',
-    title: 'Histórico Académico',
-    content: 'Histórico escolar, disciplinas, notas, e situação académica atual.',
+    icon: "ri-group-line",
+    title: "Encarregados",
+    content:
+      "Informações sobre os pais ou responsáveis, contacto de emergência e dados relacionados.",
   },
- 
+
   {
-    icon: 'ri-calendar-line',
-    title: 'Frequência',
-    content: 'Registros de frequência escolar, faltas e justificativas.',
+    icon: "ri-book-line",
+    title: "Histórico Académico",
+    content:
+      "Histórico escolar, disciplinas, notas, e situação académica atual.",
   },
+
   {
-    icon: 'ri-award-line',
-    title: 'Actividades',
-    content: 'Participação em actividades extracurriculares, eventos escolares e prémios ou menções.',
-  },
-  {
-    icon: 'ri-file-list-line',
-    title: 'Documentação',
-    content: 'Documentos importantes como bilhete de identidade, certificado de matrícula e outros arquivos necessários.',
+    icon: "ri-calendar-line",
+    title: "Frequência",
+    content: "Registros de frequência escolar, faltas e justificativas.",
   },
   {
-    icon: 'ri-file-user-line',
-    title: 'Observações',
-    content: 'Comentários e observações de professores ou coordenadores sobre o desempenho do aluno.',
+    icon: "ri-award-line",
+    title: "Actividades",
+    content:
+      "Participação em actividades extracurriculares, eventos escolares e prémios ou menções.",
+  },
+  {
+    icon: "ri-file-list-line",
+    title: "Documentação",
+    content:
+      "Documentos importantes como bilhete de identidade, certificado de matrícula e outros arquivos necessários.",
+  },
+  {
+    icon: "ri-file-user-line",
+    title: "Observações",
+    content:
+      "Comentários e observações de professores ou coordenadores sobre o desempenho do aluno.",
   },
 ];
-
 
 // Função para buscar os dados do aluno
 const fetchAluno = async () => {
   try {
-    const res = await $api(`/alunos/aluno/${ route.params.id }`, {
+    const res = await $api(`/alunos/aluno/${route.params.id}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
     // Verifique se o resultado existe antes de preencher os dados
 
-    
     if (res) {
       userData.value = {
         id: res.id,
@@ -98,7 +108,7 @@ onMounted(() => {
   <VRow v-if="userData">
     <!-- Painel de informações do aluno -->
     <VCol cols="12" md="5" lg="4">
-      <UserBioPanel :user-data="userData" />
+      <Sobre :user-data="userData" />
     </VCol>
 
     <!-- Tabs com informações adicionais -->
@@ -111,25 +121,34 @@ onMounted(() => {
       </VTabs>
 
       <!-- Conteúdo das abas -->
-      <VWindow v-model="userTab" class="mt-6 disable-tab-transition" :touch="false">
+      <VWindow
+        v-model="userTab"
+        class="mt-6 disable-tab-transition"
+        :touch="false"
+      >
+
+      <VWindowItem>
+        <Mensalidades />
+      </VWindowItem>
+
         <VWindowItem>
-          <UserTabOverview />
+          <InformacaoFamilia />
         </VWindowItem>
 
         <VWindowItem>
-          <UserTabSecurity />
+          <HistoricoAcademico />
         </VWindowItem>
 
         <VWindowItem>
-          <UserTabBillingsPlans />
+          <Frequencia />
         </VWindowItem>
 
         <VWindowItem>
-          <UserTabNotifications />
+          <Actividades />
         </VWindowItem>
 
         <VWindowItem>
-          <UserTabConnections />
+          <Documentacao />
         </VWindowItem>
       </VWindow>
     </VCol>
