@@ -11,12 +11,13 @@ import HistoricoAcademico from "@/views/utilizadores/estudantes/view/HistoricoAc
 const route = useRoute("utilizadores-estudantes-view-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
 const userTab = ref(null);
 const userData = ref(null); // Para armazenar os dados do aluno
-const token = "seu_token_aqui"; // Certifique-se de definir o token corretamente
+
+const token = useCookie("accessToken").value;
 
 const tabs = [
   {
     icon: "ri-coin-line",
-    title: "Mensalidades",
+    title: "Pagamentos",
     content:
       "Informações sobre os pais ou responsáveis, contacto de emergência e dados relacionados.",
   },

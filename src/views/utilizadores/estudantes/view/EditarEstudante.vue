@@ -1,4 +1,9 @@
 <script setup>
+
+const distritos = ref([]);
+const selectedDistrito = ref(null); // Variável para capturar o distrito selecionado
+
+
 const props = defineProps({
   userData: {
     type: Object,
@@ -51,6 +56,35 @@ const onFormReset = () => {
 const dialogVisibleUpdate = val => {
   emit('update:isDialogVisible', val)
 }
+
+
+const buscarDistritos = async () => {
+  try {
+    const res = await $api("/distritos", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Passar o token corretamente
+      },
+    });
+
+    console.log("Response distritos:", res); // Adicione este log
+
+    distritos.value = res.map((distrito) => ({
+      id: distrito.id,
+      nome: distrito.nome,
+      provincia: distrito.provincia,
+    }));
+
+    distritos.value = distritos.value.map((distrito) => ({
+      title: distrito.nome,
+      value: distrito.id, // Certifique-se de que o id e nome estão corretos
+    }));
+  } catch (err) {
+    console.error("Erro ao buscar distritos:", err);
+  }
+};
+
+buscarDistritos();
 </script>
 
 <template>

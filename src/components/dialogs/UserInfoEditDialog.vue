@@ -1,57 +1,90 @@
 <script setup>
+const token = useCookie("accessToken").value;
+
+const distritos = ref([]);
+const selectedDistrito = ref(null);
+
 const props = defineProps({
   userData: {
     type: Object,
     required: false,
     default: () => ({
-      avatar: '',
-      nomeCompleto: '',
-      dataNascimento: '',
-      distritoNascimento: '',
-      provinciaNascimento: '',
-      nomeDoPai: '',
-      nomeDaMae: '',
-      religiao: '',
-      grupoSanguineo: '',
-      endereco: '',
-      dataRegisto: '',
-      escolaAnterior: '',
-      bilheteIdentificacao: '',
-      numeroTelefonePrincipal: '',
-      sexo: '',
-      estado: '',
+      avatar: "",
+      nomeCompleto: "",
+      dataNascimento: "",
+      distritoNascimento: "",
+      provinciaNascimento: "",
+      nomeDoPai: "",
+      nomeDaMae: "",
+      religiao: "",
+      grupoSanguineo: "",
+      endereco: "",
+      dataRegisto: "",
+      escolaAnterior: "",
+      bilheteIdentificacao: "",
+      numeroTelefonePrincipal: "",
+      sexo: "",
+      estado: "",
     }),
   },
   isDialogVisible: {
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits([
-  'submit',
-  'update:isDialogVisible',
-])
+const emit = defineEmits(["submit", "update:isDialogVisible"]);
 
-const userData = ref(structuredClone(toRaw(props.userData)))
+const userData = ref(structuredClone(toRaw(props.userData)));
 
-watch(() => props, () => {
-  userData.value = structuredClone(toRaw(props.userData))
-})
+watch(
+  () => props,
+  () => {
+    userData.value = structuredClone(toRaw(props.userData));
+  }
+);
 
 const onFormSubmit = () => {
-  emit('update:isDialogVisible', false)
-  emit('submit', userData.value)
-}
+  emit("update:isDialogVisible", false);
+  emit("submit", userData.value);
+};
 
 const onFormReset = () => {
-  userData.value = structuredClone(toRaw(props.userData))
-  emit('update:isDialogVisible', false)
-}
+  userData.value = structuredClone(toRaw(props.userData));
+  emit("update:isDialogVisible", false);
+};
 
-const dialogVisibleUpdate = val => {
-  emit('update:isDialogVisible', val)
-}
+const dialogVisibleUpdate = (val) => {
+  emit("update:isDialogVisible", val);
+};
+
+const buscarDistritos = async () => {
+  try {
+    const res = await $api("/distritos", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Passar o token corretamente
+      },
+    });
+
+    console.log("Response distritos:", res); // Adicione este log
+
+    distritos.value = res.map((distrito) => ({
+      id: distrito.id,
+      nome: distrito.nome,
+      provincia: distrito.provincia,
+    }));
+
+    distritos.value = distritos.value.map((distrito) => ({
+      title: distrito.nome,
+      value: distrito.id, // Certifique-se de que o id e nome estão corretos
+    }));
+  } catch (err) {
+    console.error("Erro ao buscar distritos:", err);
+  }
+};
+
+buscarDistritos();
 </script>
 
 <template>
@@ -62,27 +95,18 @@ const dialogVisibleUpdate = val => {
   >
     <VCard class="pa-sm-11 pa-3">
       <!-- Dialog close button -->
-      <DialogCloseBtn
-        variant="text"
-        size="default"
-        @click="onFormReset"
-      />
+      <DialogCloseBtn variant="text" size="default" @click="onFormReset" />
 
       <VCardText class="pt-5">
         <div class="text-center pb-6">
-          <h4 class="text-h4 mb-2">
-            Editar Informações do Aluno
-          </h4>
+          <h4 class="text-h4 mb-2">Editar Informações do Aluno</h4>
           <div class="text-body-1">
             As actualizações nas informações do aluno serão auditadas.
           </div>
         </div>
 
         <!-- Form -->
-        <VForm
-          class="mt-4"
-          @submit.prevent="onFormSubmit"
-        >
+        <VForm class="mt-4" @submit.prevent="onFormSubmit">
           <VRow>
             <!-- Nome Completo -->
             <VCol cols="12">
@@ -132,10 +156,13 @@ const dialogVisibleUpdate = val => {
 
             <!-- Distrito de Nascimento -->
             <VCol cols="12" md="6">
-              <VTextField
-                v-model="userData.distritoNascimento"
+              <VAutocomplete
+                v-model="selectedDistrito"
                 label="Distrito de Nascimento"
-                placeholder="Ex: Lisboa"
+                placeholder="Selecionar Distrito de Nascimento"
+                :items="distritos"
+                clearable
+                clear-icon="ri-close-line"
               />
             </VCol>
 
@@ -222,19 +249,10 @@ const dialogVisibleUpdate = val => {
             </VCol>
 
             <!-- Submit and Cancel -->
-            <VCol
-              cols="12"
-              class="d-flex flex-wrap justify-center gap-4"
-            >
-              <VBtn type="submit">
-                Submeter
-              </VBtn>
+            <VCol cols="12" class="d-flex flex-wrap justify-center gap-4">
+              <VBtn type="submit"> Submeter </VBtn>
 
-              <VBtn
-                color="secondary"
-                variant="outlined"
-                @click="onFormReset"
-              >
+              <VBtn color="secondary" variant="outlined" @click="onFormReset">
                 Cancelar
               </VBtn>
             </VCol>

@@ -1,10 +1,10 @@
 <script setup>
-import UserBioPanel from '@/views/apps/user/view/UserBioPanel.vue'
-import UserTabBillingsPlans from '@/views/apps/user/view/UserTabBillingsPlans.vue'
-import UserTabConnections from '@/views/apps/user/view/UserTabConnections.vue'
-import UserTabNotifications from '@/views/apps/user/view/UserTabNotifications.vue'
-import UserTabOverview from '@/views/apps/user/view/UserTabOverview.vue'
-import UserTabSecurity from '@/views/apps/user/view/UserTabSecurity.vue'
+import UserBioPanel from '@/views/utilizadores/view/UserBioPanel.vue'
+import UserTabBillingsPlans from '@/views/utilizadores/view/UserTabBillingsPlans.vue'
+import UserTabConnections from '@/views/utilizadores/view/UserTabConnections.vue'
+import UserTabNotifications from '@/views/utilizadores/view/UserTabNotifications.vue'
+import UserTabOverview from '@/views/utilizadores/view/UserTabOverview.vue'
+import UserTabSecurity from '@/views/utilizadores/view/UserTabSecurity.vue'
 
 const route = useRoute('apps-user-view-id')
 const userTab = ref(null)
@@ -32,7 +32,7 @@ const tabs = [
   },
 ]
 
-const { data: userData } = await useApi(`/apps/users/${ route.params.id }`)
+const { data: userData } = await useApi(`/utilizadoress/${ route.params.id }`)
 </script>
 
 <template>

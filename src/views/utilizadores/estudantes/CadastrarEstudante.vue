@@ -1,6 +1,9 @@
 <script setup>
 import { PerfectScrollbar } from "vue3-perfect-scrollbar";
 import { ref, nextTick } from "vue";
+import { VAutocomplete } from "vuetify/components";
+
+const token = useCookie("accessToken").value;
 
 const distritos = ref([]);
 const selectedDistrito = ref(null); // Variável para capturar o distrito selecionado
@@ -75,7 +78,7 @@ const handleDrawerModelValueUpdate = (val) => {
   emit("update:isDrawerOpen", val);
 };
 
-const fetchDistritos = async () => {
+const buscarDistritos = async () => {
   try {
     const res = await $api("/distritos", {
       method: "GET",
@@ -101,7 +104,7 @@ const fetchDistritos = async () => {
   }
 };
 
-fetchDistritos();
+buscarDistritos();
 </script>
 
 <template>
@@ -182,7 +185,7 @@ fetchDistritos();
 
               <!-- Religião como Select -->
               <VCol cols="12">
-                <VSelect
+                <VAutocomplete
                   v-model="religiao"
                   :items="opcoesReligiao"
                   label="Religião"
@@ -193,7 +196,7 @@ fetchDistritos();
 
               <!-- Grupo Sanguíneo como Select -->
               <VCol cols="12">
-                <VSelect
+                <VAutocomplete
                   v-model="grupoSanguineo"
                   :items="opcoesGrupoSanguineo"
                   label="Grupo Sanguíneo"

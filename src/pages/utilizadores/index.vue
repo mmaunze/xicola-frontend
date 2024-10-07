@@ -3,9 +3,9 @@ import AddNewUserDrawer from "@/views/utilizadores/list/AddNewUserDrawer.vue";
 
 // 👉 Store
 const searchQuery = ref("");
-const selectedRole = ref(null);
+const roleEscolhido = ref(null);
 const selectedPlan = ref(null);
-const selectedStatus = ref(null);
+const estadoEscolhido = ref(null);
 
 const snackbar = ref(false); // Controla a visibilidade da snackbar
 const snackbarMessage = ref(""); // Armazena a mensagem a ser exibida
@@ -62,7 +62,7 @@ const estado = [
 ];
 
 // Função para buscar utilizadores da API
-const fetchUsers = async () => {
+const buscarUtilizadores = async () => {
   try {
     const res = await $api("/utilizadores", {
       method: "GET",
@@ -81,19 +81,19 @@ const fetchUsers = async () => {
       sexo: user.sexo       // Adicionei sexo
     }));
 
-    filterUsers();  // Aplicar filtros automaticamente
+    filtrarUtilizadores();  // Aplicar filtros automaticamente
   } catch (err) {
     console.error("Erro ao buscar utilizadores:", err);
   }
 };
 
 // Função para filtrar os utilizadores com base nos filtros aplicados
-const filterUsers = () => {
+const filtrarUtilizadores = () => {
   filteredUtilizadores.value = utilizadores.value.filter((user) => {
     const matchesSearch = user.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           user.email.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesRole = !selectedRole.value || user.roles.includes(selectedRole.value);
-    const matchesStatus = !selectedStatus.value || user.status === selectedStatus.value;
+    const matchesRole = !roleEscolhido.value || user.roles.includes(roleEscolhido.value);
+    const matchesStatus = !estadoEscolhido.value || user.status === estadoEscolhido.value;
     const matchesSexo = !selectedPlan.value || user.sexo === selectedPlan.value;
 
     return matchesSearch && matchesRole && matchesStatus && matchesSexo;
@@ -101,10 +101,10 @@ const filterUsers = () => {
 };
 
 // Observers para aplicar os filtros sempre que um valor mudar
-watch([searchQuery, selectedRole, selectedPlan, selectedStatus], filterUsers);
+watch([searchQuery, roleEscolhido, selectedPlan, estadoEscolhido], filtrarUtilizadores);
 
 // Função para obter o total de utilizadores
-const totalUsers = async () => {
+const totalUtilizadores = async () => {
   try {
     const res = await $api("/utilizadores/totais", {
       method: "GET",
@@ -121,8 +121,8 @@ const totalUsers = async () => {
 
 // Função para atualizar os dados ao recarregar
 const atualizarDados = () => {
-  fetchUsers();
-  totalUsers();
+  buscarUtilizadores();
+  totalUtilizadores();
 };
 
 // Função para remover um utilizador
@@ -132,7 +132,7 @@ const deleteUser = async (id) => {
   const index = selectedRows.value.findIndex((row) => row === id);
   if (index !== -1) selectedRows.value.splice(index, 1);
 
-  fetchUsers();
+  atualizarDados();
 };
 
 const widgetData = ref([
@@ -179,10 +179,9 @@ const cadastrarUtilizador = async (userData) => {
     snackbarColor.value = "success";
     snackbar.value = true;
 
-  // Refetch User
-  fetchUsers();
+  atualizarDados();
 };
-// Inicializar dados
+
 atualizarDados();
 </script>
 
@@ -233,7 +232,7 @@ atualizarDados();
         <VRow>
           <!-- Select Role -->
           <VCol cols="12" sm="4">
-            <VSelect v-model="selectedRole" label="Seleccionar o tipo de Utilizador" placeholder="Seleccionar tipo de Utilizador" :items="roles" clearable clear-icon="ri-close-line" />
+            <VSelect v-model="roleEscolhido" label="Seleccionar o tipo de Utilizador" placeholder="Seleccionar tipo de Utilizador" :items="roles" clearable clear-icon="ri-close-line" />
           </VCol>
           <!-- Select Sexo -->
           <VCol cols="12" sm="4">
@@ -241,7 +240,7 @@ atualizarDados();
           </VCol>
           <!-- Select Status -->
           <VCol cols="12" sm="4">
-            <VSelect v-model="selectedStatus" label="Seleccionar estado" placeholder="Seleccionar estado" :items="estado" clearable clear-icon="ri-close-line" />
+            <VSelect v-model="estadoEscolhido" label="Seleccionar estado" placeholder="Seleccionar estado" :items="estado" clearable clear-icon="ri-close-line" />
           </VCol>
         </VRow>
       </VCardText>
