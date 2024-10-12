@@ -1,17 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import Sobre from "@/views/utilizadores/view/Sobre.vue";
+import Sobre from "@/views/utilizadores/detalhes/Sobre.vue";
+import { onMounted, ref } from "vue";
 
-
-const route = useRoute("utilizadores-view-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
+const route = useRoute("utilizadores-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
 const userTab = ref(null);
 const userData = ref(null); // Para armazenar os dados do aluno
 
 const token = useCookie("accessToken").value;
 
 const tabs = [
- 
-
   {
     icon: "ri-group-line",
     title: "Encarregados",
@@ -25,8 +22,6 @@ const tabs = [
     content:
       "Histórico escolar, disciplinas, notas, e situação académica atual.",
   },
-
-  
 ];
 
 // Função para buscar os dados do aluno
@@ -47,7 +42,6 @@ const fetchAluno = async () => {
         nomeCompleto: res.nome,
         username: res.username,
         email: res.email,
-        
       };
     } else {
       console.error("Nenhum dado de aluno encontrado.");
@@ -84,8 +78,6 @@ onMounted(() => {
         class="mt-6 disable-tab-transition"
         :touch="false"
       >
-
-       
       </VWindow>
     </VCol>
   </VRow>

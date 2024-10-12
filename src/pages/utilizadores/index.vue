@@ -39,7 +39,6 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
-
 const buscarRoles = async () => {
   try {
     const res = await $api("/roles", {
@@ -52,7 +51,6 @@ const buscarRoles = async () => {
     roles.value = res.map((role) => ({
       id: role.id,
       name: role.name,
-      
     }));
 
     filtrarUtilizadores();
@@ -60,7 +58,6 @@ const buscarRoles = async () => {
     console.error("Erro ao buscar utilizadores:", err);
   }
 };
-
 
 const buscarUtilizadores = async () => {
   try {
@@ -91,13 +88,16 @@ const filtrarUtilizadores = () => {
   filteredUtilizadores.value = utilizadores.value.filter((utilizador) => {
     const matchesSearch =
       utilizador.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      utilizador.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      utilizador.username
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
       utilizador.email.toLowerCase().includes(searchQuery.value.toLowerCase());
     const matchesRole =
       !roleEscolhido.value || utilizador.roles.includes(roleEscolhido.value);
     const matchesStatus =
       !estadoEscolhido.value || utilizador.status === estadoEscolhido.value;
-    const matchesSexo = !selectedPlan.value || utilizador.sexo === selectedPlan.value;
+    const matchesSexo =
+      !selectedPlan.value || utilizador.sexo === selectedPlan.value;
 
     return matchesSearch && matchesRole && matchesStatus && matchesSexo;
   });
@@ -268,7 +268,6 @@ atualizarDados();
               clear-icon="ri-close-line"
             />
           </VCol>
-
         </VRow>
       </VCardText>
 
@@ -310,40 +309,38 @@ atualizarDados();
         class="text-no-wrap rounded-0"
         @update:options="updateOptions"
       >
-      
         <template #item.roles="{ item }">
           <VChip v-for="(role, index) in item.roles" :key="index">
             {{ role.name }}
           </VChip>
         </template>
 
-
         <template #item.actions="{ item }">
           <!-- Verifica se ROLE_ESTUDANTE está presente nos roles -->
-          
-          <IconBtn 
-            size="small"
-            v-if=" item.roles.includes('ROLE_ESTUDANTE')"
-            :to="{ name: 'utilizadores-estudantes-view-id', params: { id: item.id } }"
-          >
-            <VIcon 
-            icon="ri-eye-line" />
-          </IconBtn>
-          
+
           <IconBtn
             size="small"
-            v-else
-            :to="{ name: 'utilizadores-view-id', params: { id: item.id } }"
+            v-if="item.roles.includes('ROLE_ESTUDANTE')"
+            :to="{
+              name: 'utilizadores-estudantes-detalhes-id',
+              params: { id: item.id },
+            }"
           >
             <VIcon icon="ri-eye-line" />
           </IconBtn>
-        
-          <IconBtn size="small" @click="deleteUser(item.id)" style="color: red">
+
+          <IconBtn
+            size="small"
+            v-else
+            :to="{ name: 'utilizadores-detalhes-id', params: { id: item.id } }"
+          >
+            <VIcon icon="ri-eye-line" />
+          </IconBtn>
+
+          <IconBtn size="small" @click="deleteUser(item.id)" style="color: red;">
             <VIcon icon="ri-delete-bin-5-line" />
           </IconBtn>
         </template>
-        
-        
       </VDataTableServer>
     </VCard>
 

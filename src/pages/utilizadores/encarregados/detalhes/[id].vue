@@ -1,14 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import Sobre from "@/views/utilizadores/estudantes/view/Sobre.vue";
-import Frequencia from "@/views/utilizadores/estudantes/view/Frequencia.vue";
-import Mensalidades from "@/views/utilizadores/estudantes/view/Mensalidades.vue";
-import Documentacao from "@/views/utilizadores/estudantes/view/Documentacao.vue";
-import Actividades from "@/views/utilizadores/estudantes/view/Actividades.vue";
-import InformacaoFamilia from "@/views/utilizadores/estudantes/view/InformacaoFamilia.vue";
-import HistoricoAcademico from "@/views/utilizadores/estudantes/view/HistoricoAcademico.vue";
+import Actividades from "@/views/utilizadores/estudantes/detalhes/Actividades.vue";
+import Documentacao from "@/views/utilizadores/estudantes/detalhes/Documentacao.vue";
+import Frequencia from "@/views/utilizadores/estudantes/detalhes/Frequencia.vue";
+import HistoricoAcademico from "@/views/utilizadores/estudantes/detalhes/HistoricoAcademico.vue";
+import InformacaoFamilia from "@/views/utilizadores/estudantes/detalhes/InformacaoFamilia.vue";
+import Mensalidades from "@/views/utilizadores/estudantes/detalhes/Mensalidades.vue";
+import Sobre from "@/views/utilizadores/estudantes/detalhes/Sobre.vue";
+import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-estudantes-view-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
+const route = useRoute("utilizadores-estudantes-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
 const userTab = ref(null);
 const userData = ref(null); // Para armazenar os dados do aluno
 
@@ -127,10 +127,9 @@ onMounted(() => {
         class="mt-6 disable-tab-transition"
         :touch="false"
       >
-
-      <VWindowItem>
-        <Mensalidades />
-      </VWindowItem>
+        <VWindowItem>
+          <Mensalidades />
+        </VWindowItem>
 
         <VWindowItem>
           <InformacaoFamilia />

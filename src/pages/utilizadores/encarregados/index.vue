@@ -1,21 +1,19 @@
 <script setup>
 import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
 
-
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
 const selectedSexo = ref(null);
 const selectedEstado = ref(null);
 
-
-const itemsPerPage = ref(5); 
+const itemsPerPage = ref(5);
 const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
 const selectedRows = ref([]);
 const alunos = ref([]);
 const distritos = ref([]);
-const filteredAlunos = ref([]); 
+const filteredAlunos = ref([]);
 const total_alunos = ref(0);
 const total_matriculados = ref(0);
 const total_transferidos = ref(0);
@@ -26,7 +24,6 @@ const updateOptions = (options) => {
   sortBy.value = options.sortBy[0]?.key;
   orderBy.value = options.sortBy[0]?.order;
 };
-
 
 const headers = [
   { title: "Aluno", key: "id", sortable: true },
@@ -39,7 +36,6 @@ const headers = [
   { title: "Estado", key: "estado", sortable: true },
   { title: "Ações", key: "actions", sortable: false },
 ];
-
 
 const fetchDistritos = async () => {
   try {
@@ -82,13 +78,12 @@ const estado = [
   { title: "Desistente", value: "Desistente" },
 ];
 
-
 const fetchAlunos = async () => {
   try {
     const res = await $api("/alunos", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -109,16 +104,21 @@ const fetchAlunos = async () => {
   }
 };
 
-
 const filterAlunos = () => {
   filteredAlunos.value = alunos.value.filter((aluno) => {
-    const matchesSearch = 
-    aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    aluno.distritoNascimento.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    aluno.bilheteIdentificacao.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    aluno.dataNascimento.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    aluno.estado.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    aluno.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const matchesSearch =
+      aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      aluno.distritoNascimento
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      aluno.bilheteIdentificacao
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      aluno.dataNascimento
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      aluno.estado.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      aluno.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
 
     const matchesDistrito =
       !selectedDistrito.value ||
@@ -132,26 +132,23 @@ const filterAlunos = () => {
   });
 };
 
-
 const paginatedAlunos = computed(() => {
   const start = (page.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return filteredAlunos.value.slice(start, end); 
+  return filteredAlunos.value.slice(start, end);
 });
-
 
 watch(
   [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
   filterAlunos
 );
 
-
 const totalAlunos = async () => {
   try {
     const res = await $api("/alunos/totais", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -161,14 +158,10 @@ const totalAlunos = async () => {
   }
 };
 
-
-
-
 const atualizarDados = () => {
   fetchAlunos();
   totalAlunos();
 };
-
 
 const deleteAluno = async (id) => {
   await $api(`/alunos/remover/${id}`, { method: "DELETE" });
@@ -214,13 +207,11 @@ const cadastrarAluno = async (userData) => {
   fetchAlunos();
 };
 
-
 atualizarDados();
 </script>
 
 <template>
   <section>
-    
     <div class="d-flex mb-6">
       <VRow>
         <template v-for="data in mini_estatisticas" :key="id">
@@ -253,7 +244,6 @@ atualizarDados();
       </VRow>
     </div>
 
-    
     <VCard class="mb-6">
       <VCardItem class="pb-4">
         <VCardTitle>Filtrar Alunos</VCardTitle>
@@ -304,7 +294,6 @@ atualizarDados();
         >
         <VSpacer />
         <div class="d-flex align-center gap-4 flex-wrap">
-          
           <div class="app-user-search-filter">
             <VTextField
               v-model="searchQuery"
@@ -312,10 +301,8 @@ atualizarDados();
               density="compact"
             />
           </div>
-          
-          <VBtn @click="isCadastrarAlunoVisible = true"
-            >Cadastrar Aluno</VBtn
-          >
+
+          <VBtn @click="isCadastrarAlunoVisible = true">Cadastrar Aluno</VBtn>
         </div>
       </VCardText>
     </VCard>
@@ -331,12 +318,13 @@ atualizarDados();
         class="text-no-wrap rounded-0"
         @update:options="updateOptions"
       >
-        
         <template #item.actions="{ item }">
-          
           <IconBtn
             size="small"
-            :to="{ name: 'utilizadores-estudantes-view-id', params: { id: item.id } }"
+            :to="{
+              name: 'utilizadores-estudantes-detalhes-id',
+              params: { id: item.id },
+            }"
           >
             <VIcon icon="ri-eye-line" />
           </IconBtn>
