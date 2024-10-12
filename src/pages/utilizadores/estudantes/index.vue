@@ -332,7 +332,7 @@ atualizarDados();
         @update:options="updateOptions"
       >
         
-        <template #item.actions="{ item }">
+        <template  #item.actions="{ item }">
           
           <IconBtn
             size="small"

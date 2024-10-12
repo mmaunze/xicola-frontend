@@ -1,32 +1,97 @@
 <script setup>
-import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
-import { themeConfig } from '@themeConfig'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
-import authV2RegisterIllustrationBorderedDark from '@images/pages/auth-v2-register-illustration-bordered-dark.png'
-import authV2RegisterIllustrationBorderedLight from '@images/pages/auth-v2-register-illustration-bordered-light.png'
-import authV2RegisterIllustrationDark from '@images/pages/auth-v2-register-illustration-dark.png'
-import authV2RegisterIllustrationLight from '@images/pages/auth-v2-register-illustration-light.png'
-import authV2RegisterMaskDark from '@images/pages/auth-v2-register-mask-dark.png'
-import authV2RegisterMaskLight from '@images/pages/auth-v2-register-mask-light.png'
+import { ref } from "vue";
+import { VNodeRenderer } from "@layouts/components/VNodeRenderer";
+import { themeConfig } from "@themeConfig";
+import AuthProvider from "@/views/pages/authentication/AuthProvider.vue";
+import authV2RegisterIllustrationBorderedDark from "@images/pages/auth-v2-register-illustration-bordered-dark.png";
+import authV2RegisterIllustrationBorderedLight from "@images/pages/auth-v2-register-illustration-bordered-light.png";
+import authV2RegisterIllustrationDark from "@images/pages/auth-v2-register-illustration-dark.png";
+import authV2RegisterIllustrationLight from "@images/pages/auth-v2-register-illustration-light.png";
+import authV2RegisterMaskDark from "@images/pages/auth-v2-register-mask-dark.png";
+import authV2RegisterMaskLight from "@images/pages/auth-v2-register-mask-light.png";
 
-const authThemeMask = useGenerateImageVariant(authV2RegisterMaskLight, authV2RegisterMaskDark)
-const authThemeImg = useGenerateImageVariant(authV2RegisterIllustrationLight, authV2RegisterIllustrationDark, authV2RegisterIllustrationBorderedLight, authV2RegisterIllustrationBorderedDark, true)
+// Definir imagens temáticas
+const authThemeMask = useGenerateImageVariant(
+  authV2RegisterMaskLight,
+  authV2RegisterMaskDark
+);
+const authThemeImg = useGenerateImageVariant(
+  authV2RegisterIllustrationLight,
+  authV2RegisterIllustrationDark,
+  authV2RegisterIllustrationBorderedLight,
+  authV2RegisterIllustrationBorderedDark,
+  true
+);
 
+// Configuração da página sem autenticação
 definePage({
   meta: {
-    layout: 'blank',
-    unauthenticatedOnly: true,
+    layout: "blank",
+    unauthenticatedOnly: false,
   },
-})
+});
 
+// Estados do formulário e de erro
 const form = ref({
-  username: '',
-  email: '',
-  password: '',
-  privacyPolicies: false,
-})
+  nome: "",
+  username: "",
+  email: "",
+  password: "",
+  roles: ["user"], // Role definida como 'user'
+});
 
-const isPasswordVisible = ref(false)
+// Estado do snackbar para exibição de feedback
+const snackbarMessage = ref("");
+const snackbarColor = ref("success");
+const snackbar = ref(false);
+
+// Função de cadastro de utilizador
+const cadastrarUtilizador = async () => {
+  try {
+    const userData = {
+      nome: form.value.nome,
+      username: form.value.username,
+      email: form.value.email,
+      password: form.value.password,
+      roles: ["user"], // Role definida no momento do cadastro
+    };
+
+    // Chamada API para registrar o utilizador
+    const response = await $api("/cadastro", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    // Verificar status da resposta
+    if (response.status === 200) {
+      snackbarMessage.value = "Utilizador cadastrado com sucesso!";
+      snackbarColor.value = "success";
+    } else if (response.status === 400) {
+      const errorData = await response.json();
+      if (errorData.message === "Error: Email existente!") {
+        snackbarMessage.value = "O e-mail já está em uso!";
+      } else if (errorData.message === "Error: Username existente!") {
+        snackbarMessage.value = "O username já está em uso!";
+      } else {
+        snackbarMessage.value = "Erro ao criar o utilizador!";
+      }
+      snackbarColor.value = "error";
+    } else {
+      snackbarMessage.value = "Erro ao criar o utilizador!";
+      snackbarColor.value = "error";
+    }
+  } catch (error) {
+    snackbarMessage.value = "Erro de conexão com o servidor!";
+    snackbarColor.value = "error";
+  }
+  snackbar.value = true; // Mostrar snackbar
+};
+
+// Controle de visibilidade da senha
+const isPasswordVisible = ref(false);
 </script>
 
 <template>
@@ -39,21 +104,17 @@ const isPasswordVisible = ref(false)
     </div>
   </RouterLink>
 
-  <VRow
-    no-gutters
-    class="auth-wrapper"
-  >
+  <VRow no-gutters class="auth-wrapper">
     <VCol
       md="8"
       class="d-none d-md-flex align-center justify-center position-relative"
     >
-      <!-- here your illustrator -->
       <div class="d-flex align-center justify-center pa-10">
         <img
           :src="authThemeImg"
           class="auth-illustration w-100"
           alt="auth-illustration"
-        >
+        />
       </div>
       <VImg
         :src="authThemeMask"
@@ -68,109 +129,77 @@ const isPasswordVisible = ref(false)
       class="auth-card-v2 d-flex align-center justify-center"
       style="background-color: rgb(var(--v-theme-surface));"
     >
-      <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-5 pa-lg-7"
-      >
+      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-5 pa-lg-7">
         <VCardText>
-          <h4 class="text-h4 mb-1">
-            Adventure starts here 🚀
-          </h4>
-          <p class="mb-0">
-            Make your app management easy and fun!
-          </p>
+          <h4 class="text-h4 mb-1">Adventure starts here 🚀</h4>
+          <p class="mb-0">Make your app management easy and fun!</p>
         </VCardText>
 
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="cadastrarUtilizador">
             <VRow>
+              <!-- Nome -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.nome"
+                  autofocus
+                  label="Nome"
+                  placeholder="Nome Completo..."
+                />
+              </VCol>
+
               <!-- Username -->
               <VCol cols="12">
                 <VTextField
                   v-model="form.username"
-                  autofocus
                   label="Username"
-                  placeholder="Johndoe"
+                  placeholder="username"
                 />
               </VCol>
 
-              <!-- email -->
+              <!-- Email -->
               <VCol cols="12">
                 <VTextField
                   v-model="form.email"
                   label="Email"
                   type="email"
-                  placeholder="johndoe@email.com"
+                  placeholder="exemplo@email.com"
                 />
               </VCol>
 
-              <!-- password -->
+              <!-- Password -->
               <VCol cols="12">
                 <VTextField
                   v-model="form.password"
                   label="Password"
                   placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
+                  :append-inner-icon="
+                    isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'
+                  "
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
-
-                <div class="d-flex align-center my-6">
-                  <VCheckbox
-                    id="privacy-policy"
-                    v-model="form.privacyPolicies"
-                    inline
-                  />
-                  <VLabel
-                    for="privacy-policy"
-                    style="opacity: 1;"
-                  >
-                    <span class="me-1 text-high-emphasis">I agree to</span>
-                    <a
-                      href="javascript:void(0)"
-                      class="text-primary"
-                    >privacy policy & terms</a>
-                  </VLabel>
-                </div>
-
-                <VBtn
-                  block
-                  type="submit"
-                >
-                  Sign up
-                </VBtn>
               </VCol>
 
-              <!-- create account -->
+              <!-- Aceitar políticas de privacidade -->
               <VCol cols="12">
-                <div class="text-center text-base">
-                  <span class="d-inline-block">Already have an account?</span> <RouterLink
-                    class="text-primary d-inline-block"
-                    :to="{ name: 'login' }"
-                  >
-                    Sign in instead
-                  </RouterLink>
-                </div>
+                <VCheckbox
+                  v-model="form.privacyPolicies"
+                  label="Aceito as políticas de privacidade & termos"
+                />
               </VCol>
 
+              <!-- Botão de Cadastro -->
               <VCol cols="12">
-                <div class="d-flex align-center">
-                  <VDivider />
-                  <span class="mx-4 text-high-emphasis">or</span>
-                  <VDivider />
-                </div>
-              </VCol>
-
-              <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
-                <AuthProvider />
+                <VBtn block type="submit">Cadastrar</VBtn>
               </VCol>
             </VRow>
           </VForm>
+
+          <!-- Snackbar para feedback do utilizador -->
+          <VSnackbar v-model="snackbar" :color="snackbarColor">
+            {{ snackbarMessage }}
+          </VSnackbar>
         </VCardText>
       </VCard>
     </VCol>

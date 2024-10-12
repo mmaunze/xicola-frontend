@@ -1,5 +1,6 @@
 <script setup>
 import { useGenerateImageVariant } from "@/@core/composable/useGenerateImageVariant";
+import { $api } from "@/utils/api";
 import AuthProvider from "@/views/pages/authentication/AuthProvider.vue";
 import authV2LoginIllustrationBorderedDark from "@images/pages/auth-v2-login-illustration-bordered-dark.png";
 import authV2LoginIllustrationBorderedLight from "@images/pages/auth-v2-login-illustration-bordered-light.png";
@@ -9,7 +10,6 @@ import authV2LoginMaskDark from "@images/pages/auth-v2-login-mask-dark.png";
 import authV2LoginMaskLight from "@images/pages/auth-v2-login-mask-light.png";
 import { VNodeRenderer } from "@layouts/components/VNodeRenderer";
 import { themeConfig } from "@themeConfig";
-import { $api } from "@/utils/api";
 
 definePage({
   meta: {
@@ -46,7 +46,7 @@ const login = async () => {
   errorMessage.value = ""; // Limpa a mensagem de erro antes de tentar novamente
   try {
     // Chama a API de login com as credenciais
-    const response = await $api("/autenticacao/login", {
+    const response = await $api("/login", {
       method: "POST",
       body: {
         username: form.value.username,
@@ -57,14 +57,14 @@ const login = async () => {
     // Se a resposta for bem-sucedida, guarda o token no cookie
     const accessToken = response.accessToken;
     const cookie = useCookie("accessToken");
-    cookie.value = accessToken; 
+    cookie.value = accessToken;
 
     const userData = {
       name: response.username,
       email: response.email,
       role: response.roles[0], // Supondo que roles seja uma lista
     };
-    
+
     localStorage.setItem("userData", JSON.stringify(userData));
     router.push("/");
   } catch (error) {
@@ -117,9 +117,7 @@ const login = async () => {
             <span class="text-capitalize">{{ themeConfig.app.title }}! 👋🏻</span>
           </h4>
 
-          <p class="mb-0">
-            Por favor, insira suas credenciais para continuar
-          </p>
+          <p class="mb-0">Por favor, insira suas credenciais para continuar</p>
         </VCardText>
 
         <VCardText>
@@ -178,9 +176,9 @@ const login = async () => {
               <!-- create account -->
               <VCol cols="12" class="text-body-1 text-center">
                 <span class="d-inline-block"> New on our platform? </span>
-                <RouterLink to="register"
+                <RouterLink
+                  to="register"
                   class="text-primary ms-1 d-inline-block text-body-1"
-                  
                 >
                   Create an account
                 </RouterLink>

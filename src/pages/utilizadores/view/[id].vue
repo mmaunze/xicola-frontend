@@ -1,104 +1,99 @@
 <script setup>
-import UserBioPanel from '@/views/utilizadores/view/UserBioPanel.vue'
-import UserTabBillingsPlans from '@/views/utilizadores/view/UserTabBillingsPlans.vue'
-import UserTabConnections from '@/views/utilizadores/view/UserTabConnections.vue'
-import UserTabNotifications from '@/views/utilizadores/view/UserTabNotifications.vue'
-import UserTabOverview from '@/views/utilizadores/view/UserTabOverview.vue'
-import UserTabSecurity from '@/views/utilizadores/view/UserTabSecurity.vue'
+import { ref, onMounted } from "vue";
+import Sobre from "@/views/utilizadores/view/Sobre.vue";
 
-const route = useRoute('apps-user-view-id')
-const userTab = ref(null)
+
+const route = useRoute("utilizadores-view-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-view-id"
+const userTab = ref(null);
+const userData = ref(null); // Para armazenar os dados do aluno
+
+const token = useCookie("accessToken").value;
 
 const tabs = [
-  {
-    icon: 'ri-group-line',
-    title: 'Overview',
-  },
-  {
-    icon: 'ri-lock-2-line',
-    title: 'Security',
-  },
-  {
-    icon: 'ri-bookmark-line',
-    title: 'Billing & Plan',
-  },
-  {
-    icon: 'ri-notification-4-line',
-    title: 'Notifications',
-  },
-  {
-    icon: 'ri-link-m',
-    title: 'Connections',
-  },
-]
+ 
 
-const { data: userData } = await useApi(`/utilizadoress/${ route.params.id }`)
+  {
+    icon: "ri-group-line",
+    title: "Encarregados",
+    content:
+      "Informações sobre os pais ou responsáveis, contacto de emergência e dados relacionados.",
+  },
+
+  {
+    icon: "ri-book-line",
+    title: "Histórico Académico",
+    content:
+      "Histórico escolar, disciplinas, notas, e situação académica atual.",
+  },
+
+  
+];
+
+// Função para buscar os dados do aluno
+const fetchAluno = async () => {
+  try {
+    const res = await $api(`/utilizadores/utilizador/${route.params.id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Verifique se o resultado existe antes de preencher os dados
+
+    if (res) {
+      userData.value = {
+        id: res.id,
+        nomeCompleto: res.nome,
+        username: res.username,
+        email: res.email,
+        
+      };
+    } else {
+      console.error("Nenhum dado de aluno encontrado.");
+    }
+  } catch (err) {
+    console.error("Erro ao buscar aluno:", err);
+  }
+};
+
+// Carregar os dados do aluno assim que o componente for montado
+onMounted(() => {
+  fetchAluno();
+});
 </script>
-
 <template>
   <VRow v-if="userData">
-    <VCol
-      cols="12"
-      md="5"
-      lg="4"
-    >
-      <UserBioPanel :user-data="userData" />
+    <!-- Painel de informações do aluno -->
+    <VCol cols="12" md="5" lg="4">
+      <Sobre :user-data="userData" />
     </VCol>
 
-    <VCol
-      cols="12"
-      md="7"
-      lg="8"
-    >
-      <VTabs
-        v-model="userTab"
-        class="v-tabs-pill"
-      >
-        <VTab
-          v-for="tab in tabs"
-          :key="tab.icon"
-        >
-          <VIcon
-            start
-            :icon="tab.icon"
-          />
+    <!-- Tabs com informações adicionais -->
+    <VCol cols="12" md="7" lg="8">
+      <VTabs v-model="userTab" class="v-tabs-pill">
+        <VTab v-for="tab in tabs" :key="tab.icon">
+          <VIcon start :icon="tab.icon" />
           <span>{{ tab.title }}</span>
         </VTab>
       </VTabs>
 
+      <!-- Conteúdo das abas -->
       <VWindow
         v-model="userTab"
         class="mt-6 disable-tab-transition"
         :touch="false"
       >
-        <VWindowItem>
-          <UserTabOverview />
-        </VWindowItem>
 
-        <VWindowItem>
-          <UserTabSecurity />
-        </VWindowItem>
-
-        <VWindowItem>
-          <UserTabBillingsPlans />
-        </VWindowItem>
-
-        <VWindowItem>
-          <UserTabNotifications />
-        </VWindowItem>
-
-        <VWindowItem>
-          <UserTabConnections />
-        </VWindowItem>
+       
       </VWindow>
     </VCol>
   </VRow>
+
+  <!-- Alerta se o aluno não for encontrado -->
   <div v-else>
-    <VAlert
-      type="error"
-      variant="tonal"
-    >
-      Invoice with ID  {{ route.params.id }} not found!
+    <VAlert type="error" variant="tonal">
+      Utilizador {{ route.params.id }} não encontrado!
     </VAlert>
   </div>
 </template>
