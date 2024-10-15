@@ -190,7 +190,7 @@ const widgetData = ref([
 const isCadastrarUserVisible = ref(false);
 
 const cadastrarUtilizador = async (userData) => {
-  await $api("/cadastro", {
+  await $api("/autenticacao/cadastro", {
     method: "POST",
     body: userData,
   });
@@ -337,7 +337,7 @@ atualizarDados();
             <VIcon icon="ri-eye-line" />
           </IconBtn>
 
-          <IconBtn size="small" @click="deleteUser(item.id)" style="color: red;">
+          <IconBtn size="small" @click="deleteUser(item.id)" style="color: red">
             <VIcon icon="ri-delete-bin-5-line" />
           </IconBtn>
         </template>

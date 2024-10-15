@@ -11,4 +11,4 @@ services:
       - ./public:/app/public
     restart: always
     ports:
-      - 5173:5173
+      - 9999:9999

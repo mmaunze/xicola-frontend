@@ -153,7 +153,7 @@ Inicie o servidor de desenvolvimento com o seguinte comando:
 npm run dev
 ```
 
-A aplicação estará disponível em `http://localhost:5173`.
+A aplicação estará disponível em `http://localhost:9999`.
 
 ### Build para Produção
 

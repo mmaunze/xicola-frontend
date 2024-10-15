@@ -57,7 +57,7 @@ const cadastrarUtilizador = async () => {
     };
 
     // Chamada API para registrar o utilizador
-    const response = await $api("/cadastro", {
+    const response = await $api("/autenticacao/cadastro", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -46,7 +46,7 @@ const login = async () => {
   errorMessage.value = ""; // Limpa a mensagem de erro antes de tentar novamente
   try {
     // Chama a API de login com as credenciais
-    const response = await $api("/login", {
+    const response = await $api("/autenticacao/login", {
       method: "POST",
       body: {
         username: form.value.username,
