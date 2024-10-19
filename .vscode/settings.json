@@ -91,5 +91,35 @@
         "borderStyle": "solid"
       }
     ]
-  }
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Lbd",
+      "database": "lbd",
+      "username": "mmaunze"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "esib",
+      "database": "esib",
+      "username": "mmaunze"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "Xicola",
+      "database": "xicola",
+      "username": "postgres",
+      "password": "Pa$$w0rd"
+    }
+  ]
 }
