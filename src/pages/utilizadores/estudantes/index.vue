@@ -15,16 +15,71 @@ const selectedRows = ref([]);
 const alunos = ref([]);
 const distritos = ref([]);
 const filteredAlunos = ref([]);
+
+const token = useCookie("accessToken").value;
+
 const total_alunos = ref(0);
 const total_matriculados = ref(0);
 const total_transferidos = ref(0);
-const token = useCookie("accessToken").value;
+const total_expulsos = ref(0);
+const total_suspensos = ref(0);
+const total_desistentes = ref(0);
+const total_graduados = ref(0);
 
-const updateOptions = (options) => {
-  page.value = options.page;
-  sortBy.value = options.sortBy[0]?.key;
-  orderBy.value = options.sortBy[0]?.order;
-};
+const isCadastrarAlunoVisible = ref(false);
+const isEditarAlunoVisible = ref(false);
+
+const mini_estatisticas = ref([
+  {
+    title: "Todos Alunos",
+    value: total_alunos,
+    desc: "Alunos cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+  {
+    title: "Matriculados",
+    value: total_matriculados,
+    desc: "Alunos matriculados",
+    icon: "ri-user-follow-line",
+    iconColor: "success",
+  },
+  {
+    title: "Transferidos",
+    value: total_transferidos,
+    desc: "Alunos transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+  {
+    title: "Gradudados",
+    value: total_graduados,
+    desc: "Alunos cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+  {
+    title: "Desistentes",
+    value: total_desistentes,
+    desc: "Alunos matriculados",
+    icon: "ri-user-follow-line",
+    iconColor: "success",
+  },
+  {
+    title: "Suspensos",
+    value: total_suspensos,
+    desc: "Alunos transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+  {
+    title: "Expulsos",
+    value: total_expulsos,
+    desc: "Alunos transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+]);
 
 const headers = [
   { title: "Aluno", key: "id", sortable: true },
@@ -38,6 +93,26 @@ const headers = [
   { title: "Estado", key: "estado", sortable: true },
   { title: "Ações", key: "actions", sortable: false },
 ];
+
+const sexo = [
+  { title: "Masculino", value: "M" },
+  { title: "Feminino", value: "F" },
+];
+
+const estado = [
+  { title: "Matriculado", value: "Matriculado" },
+  { title: "Transferido", value: "Transferido" },
+  { title: "Graduado", value: "Graduado" },
+  { title: "Suspenso", value: "Suspenso" },
+  { title: "Expulso", value: "Expulso" },
+  { title: "Desistente", value: "Desistente" },
+];
+
+const paginatedAlunos = computed(() => {
+  const start = (page.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredAlunos.value.slice(start, end);
+});
 
 const fetchDistritos = async () => {
   try {
@@ -63,22 +138,6 @@ const fetchDistritos = async () => {
     console.error("Erro ao buscar utilizadores:", err);
   }
 };
-
-const sexo = [
-  { title: "Masculino", value: "M" },
-  { title: "Feminino", value: "F" },
-];
-
-fetchDistritos();
-
-const estado = [
-  { title: "Matriculado", value: "Matriculado" },
-  { title: "Transferido", value: "Transferido" },
-  { title: "Graduado", value: "Graduado" },
-  { title: "Suspenso", value: "Suspenso" },
-  { title: "Expulso", value: "Expulso" },
-  { title: "Desistente", value: "Desistente" },
-];
 
 const fetchAlunos = async () => {
   try {
@@ -110,13 +169,11 @@ const fetchAlunos = async () => {
 const filterAlunos = () => {
   filteredAlunos.value = alunos.value.filter((aluno) => {
     const matchesSearch =
+  
       aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.distritoNascimento
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase()) ||
-      aluno.bilheteIdentificacao
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase()) ||
+      aluno.distritoNascimento.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      aluno.bilheteIdentificacao.toLowerCase()
+.includes(searchQuery.value.toLowerCase()) ||
       aluno.dataNascimento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
@@ -135,17 +192,6 @@ const filterAlunos = () => {
   });
 };
 
-const paginatedAlunos = computed(() => {
-  const start = (page.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredAlunos.value.slice(start, end);
-});
-
-watch(
-  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
-  filterAlunos
-);
-
 const totalAlunos = async () => {
   try {
     const res = await $api("/alunos/totais", {
@@ -161,46 +207,14 @@ const totalAlunos = async () => {
   }
 };
 
-const atualizarDados = () => {
-  fetchAlunos();
-  totalAlunos();
-};
-
 const deleteAluno = async (id) => {
   await $api(`/alunos/remover/${id}`, { method: "DELETE" });
 
   const index = selectedRows.value.findIndex((row) => row === id);
   if (index !== -1) selectedRows.value.splice(index, 1);
 
-  fetchAlunos();
+  atualizarDados();
 };
-
-const mini_estatisticas = ref([
-  {
-    title: "Todos Alunos",
-    value: total_alunos,
-    desc: "Alunos cadastrados",
-    icon: "ri-group-line",
-    iconColor: "primary",
-  },
-  {
-    title: "Matriculados",
-    value: total_matriculados,
-    desc: "Alunos matriculados",
-    icon: "ri-user-follow-line",
-    iconColor: "success",
-  },
-  {
-    title: "Transferidos",
-    value: total_transferidos,
-    desc: "Alunos transferidos",
-    icon: "ri-user-search-line",
-    iconColor: "warning",
-  },
-]);
-
-const isCadastrarAlunoVisible = ref(false);
-const isEditarAlunoVisible = ref(false);
 
 const cadastrarAluno = async (userData) => {
   await $api("/alunos/cadastrar", {
@@ -220,6 +234,101 @@ const editarAluno = async (userData) => {
   fetchAlunos();
 };
 
+const totalMatriculados = async () => {
+  try {
+    const res = await $api("/alunos/estado/Matriculado", {
+      method: "GET",
+    });
+
+    total_matriculados.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totaTransferidos = async () => {
+  try {
+    const res = await $api("/alunos/estado/Transferido", {
+      method: "GET",
+    });
+
+    total_transferidos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalGradudados = async () => {
+  try {
+    const res = await $api("/alunos/estado/Graduado", {
+      method: "GET",
+    });
+
+    total_graduados.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalDesistentes = async () => {
+  try {
+    const res = await $api("/alunos/estado/Desistente", {
+      method: "GET",
+    });
+
+    total_desistentes.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalSuspensos = async () => {
+  try {
+    const res = await $api("/alunos/estado/Suspenso", {
+      method: "GET",
+    });
+
+    total_suspensos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalExpulsos = async () => {
+  try {
+    const res = await $api("/alunos/estado/Graduado", {
+      method: "GET",
+    });
+
+    total_expulsos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const updateOptions = (options) => {
+  page.value = options.page;
+  sortBy.value = options.sortBy[0]?.key;
+  orderBy.value = options.sortBy[0]?.order;
+};
+
+watch(
+  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
+  filterAlunos
+);
+
+const atualizarDados = () => {
+  fetchAlunos();
+  totalAlunos();
+  totaTransferidos();
+  totalMatriculados();
+  totalGradudados();
+  totalExpulsos();
+  totalSuspensos();
+  totalDesistentes();
+  fetchDistritos();
+};
+
 atualizarDados();
 </script>
 
@@ -228,7 +337,7 @@ atualizarDados();
     <div class="d-flex mb-6">
       <VRow>
         <template v-for="data in mini_estatisticas" :key="id">
-          <VCol cols="12" md="4" sm="6">
+          <VCol cols="12" md="3" sm="6">
             <VCard>
               <VCardText>
                 <div class="d-flex justify-space-between">
