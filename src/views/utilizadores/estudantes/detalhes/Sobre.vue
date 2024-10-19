@@ -1,4 +1,6 @@
 <script setup>
+import EditarEstudante from '../EditarEstudante.vue';
+
 const props = defineProps({
   userData: {
     type: Object,
@@ -214,7 +216,7 @@ const resolveEstadoVariant = (estado) => {
   </VRow>
 
   <!-- 👉 Edit user info dialog -->
-  <UserInfoEditDialog
+  <EditarEstudante
     v-model:isDialogVisible="isUserInfoEditDialogVisible"
     :user-data="props.userData"
   />

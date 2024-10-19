@@ -3,10 +3,11 @@ import { PerfectScrollbar } from "vue3-perfect-scrollbar";
 import { ref, nextTick } from "vue";
 import { VAutocomplete } from "vuetify/components";
 
+
 const token = useCookie("accessToken").value;
 
 const distritos = ref([]);
-const selectedDistrito = ref(null); // Variável para capturar o distrito selecionado
+const selectedDistrito = ref(null); 
 
 const props = defineProps({
   isDrawerOpen: {
@@ -64,6 +65,7 @@ const registerStudent = async (studentData) => {
     });
 
     return response; // Retornar a resposta da API
+
   } catch (error) {
     console.error("Erro ao cadastrar estudante:", error);
     throw new Error("Erro ao cadastrar estudante"); // Lançar erro para ser tratado na submissão

@@ -1,5 +1,6 @@
 <script setup>
 import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
+import EditarEstudante from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -43,7 +44,7 @@ const fetchDistritos = async () => {
     const res = await $api("/distritos", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Passar o token corretamente
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -199,10 +200,20 @@ const mini_estatisticas = ref([
 ]);
 
 const isCadastrarAlunoVisible = ref(false);
+const isEditarAlunoVisible = ref(false);
 
 const cadastrarAluno = async (userData) => {
   await $api("/alunos/cadastrar", {
     method: "POST",
+    body: userData,
+  });
+
+  fetchAlunos();
+};
+
+const editarAluno = async (userData) => {
+  await $api("/alunos/editar/{id}", {
+    method: "PUT",
     body: userData,
   });
 
@@ -335,13 +346,18 @@ atualizarDados();
             icon="ri-edit-2-line"
             :icon-color="success"
             variant="plain"
-            @click="isCadastrarAlunoVisible = true"
+            @click="isEditarAlunoVisible = true"
           />
         </template>
       </VDataTableServer>
     </VCard>
     <!-- Cadastrar estudante modal -->
     <CadastrarEstudante
+      v-model:isDrawerOpen="isCadastrarAlunoVisible"
+      @user-data="cadastrarAluno"
+    />
+
+    <EditarEstudante
       v-model:isDrawerOpen="isCadastrarAlunoVisible"
       @user-data="cadastrarAluno"
     />
