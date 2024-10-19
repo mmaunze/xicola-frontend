@@ -135,7 +135,7 @@ const deleteUser = async (id) => {
       method: "DELETE",
     });
 
-    if (response === 200) {
+    if (response.code === 200) {
       // Sucesso ao deletar o usuário
       const index = selectedRows.value.findIndex((row) => row.id === id);
       if (index !== -1) selectedRows.value.splice(index, 1);

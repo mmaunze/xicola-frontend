@@ -113,8 +113,8 @@ const login = async () => {
       <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-5 pa-lg-7">
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Bem vindo a
-            <span class="text-capitalize">{{ themeConfig.app.title }}! 👋🏻</span>
+          📚 Bem vindo a
+            <span class="text-capitalize">{{ themeConfig.app.title }}...</span>
           </h4>
 
           <p class="mb-0">Por favor, insira suas credenciais para continuar</p>
@@ -175,22 +175,22 @@ const login = async () => {
 
               <!-- create account -->
               <VCol cols="12" class="text-body-1 text-center">
-                <span class="d-inline-block"> New on our platform? </span>
+                <span class="d-inline-block"> Nao esta cadastrado ? </span>
                 <RouterLink
                   to="register"
                   class="text-primary ms-1 d-inline-block text-body-1"
                 >
-                  Create an account
+                  Criar uma conta
                 </RouterLink>
               </VCol>
 
               <VCol cols="12" class="d-flex align-center">
                 <VDivider />
-                <span class="mx-4 text-high-emphasis">or</span>
+                <span class="mx-4 text-high-emphasis">ou</span>
                 <VDivider />
               </VCol>
 
-              <!-- auth providers -->
+              
               <VCol cols="12" class="text-center">
                 <AuthProvider />
               </VCol>

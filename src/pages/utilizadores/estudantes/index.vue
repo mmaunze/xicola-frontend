@@ -29,6 +29,7 @@ const headers = [
   { title: "Aluno", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
+  { title: "Provincia", key: "provinciaNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
   { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
@@ -92,6 +93,7 @@ const fetchAlunos = async () => {
       nome: aluno.nomeCompleto,
       dataNascimento: aluno.dataNascimento,
       distritoNascimento: aluno.distritoNascimento,
+      provinciaNascimento: aluno.provinciaNascimento,
       bilheteIdentificacao: aluno.bilheteIdentificacao,
       numeroTelefonePrincipal: aluno.numeroTelefonePrincipal,
       sexo: aluno.sexo,
@@ -199,7 +201,7 @@ const mini_estatisticas = ref([
 const isCadastrarAlunoVisible = ref(false);
 
 const cadastrarAluno = async (userData) => {
-  await $api("/autenticacao/cadastro", {
+  await $api("/alunos/cadastrar", {
     method: "POST",
     body: userData,
   });

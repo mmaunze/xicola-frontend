@@ -37,6 +37,11 @@ const opcoesSexo = ["M", "F"];
 const opcoesReligiao = ["Cristã", "Muçulmana", "Hindu", "Outra"];
 const opcoesGrupoSanguineo = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
+// Snackbar para exibir mensagens de sucesso ou erro
+const snackbarMessage = ref("");
+const snackbarColor = ref("success");
+const snackbar = ref(false);
+
 // 👉 drawer close
 const closeNavigationDrawer = () => {
   emit("update:isDrawerOpen", false);
@@ -46,14 +51,33 @@ const closeNavigationDrawer = () => {
   });
 };
 
+// Função para cadastrar o estudante na API
+const registerStudent = async (studentData) => {
+  try {
+    const response = await $api("/alunos/cadastrar", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(studentData),
+    });
+
+    return response; // Retornar a resposta da API
+  } catch (error) {
+    console.error("Erro ao cadastrar estudante:", error);
+    throw new Error("Erro ao cadastrar estudante"); // Lançar erro para ser tratado na submissão
+  }
+};
+
 // Função de submissão do formulário
-const onSubmit = () => {
-  refForm.value?.validate().then(({ valid }) => {
+const onSubmit = async () => {
+  refForm.value?.validate().then(async ({ valid }) => {
     if (valid) {
-      emit("userData", {
+      const studentData = {
         nomeCompleto: nomeCompleto.value,
         dataNascimento: dataNascimento.value,
-        distritoNascimento: selectedDistrito.value, // Capturando o distrito selecionado
+        distritoNascimento: selectedDistrito.value, 
         sexo: sexo.value,
         bilheteIdentificacao: bilheteIdentificacao.value,
         religiao: religiao.value,
@@ -63,12 +87,29 @@ const onSubmit = () => {
         nomeDoPai: nomeDoPai.value,
         nomeDaMae: nomeDaMae.value,
         numeroTelefonePrincipal: numeroTelefonePrincipal.value,
-      });
-      emit("update:isDrawerOpen", false);
-      nextTick(() => {
-        refForm.value?.reset();
-        refForm.value?.resetValidation();
-      });
+      };
+
+      try {
+        await registerStudent(studentData); // Chamada para cadastrar estudante
+        snackbarMessage.value = "Estudante cadastrado com sucesso!";
+        snackbarColor.value = "success";
+        snackbar.value = true;
+      } catch (error) {
+        snackbarMessage.value = "Erro ao cadastrar estudante. Tente novamente.";
+        snackbarColor.value = "error";
+        snackbar.value = true;
+      } finally {
+        emit("update:isDrawerOpen", false);
+        nextTick(() => {
+          refForm.value?.reset();
+          refForm.value?.resetValidation();
+        });
+      }
+    } else {
+      // Exibir mensagem de erro se a validação falhar
+      snackbarMessage.value = "Por favor, preencha todos os campos obrigatórios corretamente.";
+      snackbarColor.value = "error";
+      snackbar.value = true;
     }
   });
 };
@@ -83,11 +124,9 @@ const buscarDistritos = async () => {
     const res = await $api("/distritos", {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`, // Passar o token corretamente
+        Authorization: `Bearer ${token}`,
       },
     });
-
-    console.log("Response distritos:", res); // Adicione este log
 
     distritos.value = res.map((distrito) => ({
       id: distrito.id,
@@ -97,10 +136,13 @@ const buscarDistritos = async () => {
 
     distritos.value = distritos.value.map((distrito) => ({
       title: distrito.nome,
-      value: distrito.id, // Certifique-se de que o id e nome estão corretos
+      value: distrito.nome,
     }));
   } catch (err) {
     console.error("Erro ao buscar distritos:", err);
+    snackbarMessage.value = "Erro ao buscar distritos. Tente novamente mais tarde.";
+    snackbarColor.value = "error";
+    snackbar.value = true;
   }
 };
 
@@ -140,11 +182,12 @@ buscarDistritos();
                 />
               </VCol>
 
-              <!-- Data de Nascimento com Calendário -->
+              <!-- Data de Nascimento -->
               <VCol cols="12">
                 <VTextField
                   v-model="dataNascimento"
                   label="Data de Nascimento"
+                  type="date"
                   :rules="[requiredValidator]"
                   placeholder="Selecione a data"
                 />
@@ -179,7 +222,7 @@ buscarDistritos();
                   v-model="bilheteIdentificacao"
                   label="Bilhete de Identificação"
                   placeholder="Número do Bilhete"
-                   :rules="[requiredValidator,lengthValidator(5,13)]"
+                  :rules="[requiredValidator]"
                 />
               </VCol>
 
@@ -190,7 +233,7 @@ buscarDistritos();
                   :items="opcoesReligiao"
                   label="Religião"
                   placeholder="Selecione a religião"
-                   :rules="[requiredValidator]"
+                  :rules="[requiredValidator]"
                 />
               </VCol>
 
@@ -271,5 +314,10 @@ buscarDistritos();
         </VCardText>
       </VCard>
     </PerfectScrollbar>
+
+    <!-- Snackbar para mensagens de sucesso ou erro -->
+    <VSnackbar v-model="snackbar" :color="snackbarColor" timeout="4000">
+      {{ snackbarMessage }}
+    </VSnackbar>
   </VNavigationDrawer>
 </template>

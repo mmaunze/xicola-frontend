@@ -2,15 +2,15 @@
 import { ref } from "vue";
 import { VNodeRenderer } from "@layouts/components/VNodeRenderer";
 import { themeConfig } from "@themeConfig";
-import AuthProvider from "@/views/pages/authentication/AuthProvider.vue";
 import authV2RegisterIllustrationBorderedDark from "@images/pages/auth-v2-register-illustration-bordered-dark.png";
 import authV2RegisterIllustrationBorderedLight from "@images/pages/auth-v2-register-illustration-bordered-light.png";
 import authV2RegisterIllustrationDark from "@images/pages/auth-v2-register-illustration-dark.png";
 import authV2RegisterIllustrationLight from "@images/pages/auth-v2-register-illustration-light.png";
 import authV2RegisterMaskDark from "@images/pages/auth-v2-register-mask-dark.png";
 import authV2RegisterMaskLight from "@images/pages/auth-v2-register-mask-light.png";
+import { useRouter } from "vue-router";
 
-// Definir imagens temáticas
+
 const authThemeMask = useGenerateImageVariant(
   authV2RegisterMaskLight,
   authV2RegisterMaskDark
@@ -23,7 +23,7 @@ const authThemeImg = useGenerateImageVariant(
   true
 );
 
-// Configuração da página sem autenticação
+
 definePage({
   meta: {
     layout: "blank",
@@ -31,21 +31,21 @@ definePage({
   },
 });
 
-// Estados do formulário e de erro
+const router = useRouter()
+
 const form = ref({
   nome: "",
   username: "",
   email: "",
   password: "",
-  roles: ["user"], // Role definida como 'user'
+  roles: ["user"], 
 });
 
-// Estado do snackbar para exibição de feedback
+
 const snackbarMessage = ref("");
 const snackbarColor = ref("success");
 const snackbar = ref(false);
 
-// Função de cadastro de utilizador
 const cadastrarUtilizador = async () => {
   try {
     const userData = {
@@ -53,7 +53,7 @@ const cadastrarUtilizador = async () => {
       username: form.value.username,
       email: form.value.email,
       password: form.value.password,
-      roles: ["user"], // Role definida no momento do cadastro
+      roles: ["user"], 
     };
 
     // Chamada API para registrar o utilizador
@@ -65,15 +65,15 @@ const cadastrarUtilizador = async () => {
       body: JSON.stringify(userData),
     });
 
-    // Verificar status da resposta
-    if (response.status === 200) {
-      snackbarMessage.value = "Utilizador cadastrado com sucesso!";
+   
+    if (response.message === "Utilizador Registado com sucesso!") {
+      snackbarMessage.value = "Cadastrado bem sucedido";
       snackbarColor.value = "success";
+      router.push("/login")
     } else if (response.status === 400) {
-      const errorData = await response.json();
-      if (errorData.message === "Error: Email existente!") {
+      if (response.message  === "Error: Email existente!") {
         snackbarMessage.value = "O e-mail já está em uso!";
-      } else if (errorData.message === "Error: Username existente!") {
+      } else if (response.message  === "Error: Username existente!") {
         snackbarMessage.value = "O username já está em uso!";
       } else {
         snackbarMessage.value = "Erro ao criar o utilizador!";
@@ -87,10 +87,10 @@ const cadastrarUtilizador = async () => {
     snackbarMessage.value = "Erro de conexão com o servidor!";
     snackbarColor.value = "error";
   }
-  snackbar.value = true; // Mostrar snackbar
+  snackbar.value = true; 
 };
 
-// Controle de visibilidade da senha
+
 const isPasswordVisible = ref(false);
 </script>
 
@@ -131,24 +131,28 @@ const isPasswordVisible = ref(false);
     >
       <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-5 pa-lg-7">
         <VCardText>
-          <h4 class="text-h4 mb-1">Adventure starts here 🚀</h4>
-          <p class="mb-0">Make your app management easy and fun!</p>
+          <h2 class="mb-4 text-h3 font-weight-bold">
+            Criar conta
+          </h2>
+          <p class="mb-3 text-body-2">
+            Crie uma nova conta para iniciar sessão ou recuperar a sua senha.
+          </p>
         </VCardText>
 
         <VCardText>
           <VForm @submit.prevent="cadastrarUtilizador">
             <VRow>
-              <!-- Nome -->
+              
               <VCol cols="12">
                 <VTextField
                   v-model="form.nome"
                   autofocus
-                  label="Nome"
+                  label="Nome Completo"
                   placeholder="Nome Completo..."
                 />
               </VCol>
 
-              <!-- Username -->
+            
               <VCol cols="12">
                 <VTextField
                   v-model="form.username"
@@ -157,21 +161,21 @@ const isPasswordVisible = ref(false);
                 />
               </VCol>
 
-              <!-- Email -->
+             
               <VCol cols="12">
                 <VTextField
                   v-model="form.email"
-                  label="Email"
+                  label="E-mail"
                   type="email"
                   placeholder="exemplo@email.com"
                 />
               </VCol>
 
-              <!-- Password -->
+              
               <VCol cols="12">
                 <VTextField
                   v-model="form.password"
-                  label="Password"
+                  label="Senha"
                   placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
                   :append-inner-icon="
@@ -181,7 +185,7 @@ const isPasswordVisible = ref(false);
                 />
               </VCol>
 
-              <!-- Aceitar políticas de privacidade -->
+              
               <VCol cols="12">
                 <VCheckbox
                   v-model="form.privacyPolicies"
@@ -189,14 +193,21 @@ const isPasswordVisible = ref(false);
                 />
               </VCol>
 
-              <!-- Botão de Cadastro -->
+             
               <VCol cols="12">
                 <VBtn block type="submit">Cadastrar</VBtn>
               </VCol>
             </VRow>
           </VForm>
-
-          <!-- Snackbar para feedback do utilizador -->
+          <VCol cols="12" class="text-body-1 text-center">
+                <RouterLink
+                  to="login"
+                  class="text-primary ms-1 d-inline-block text-body-1"
+                >
+                  Fazer login em vez disso
+                </RouterLink>
+              </VCol>
+    
           <VSnackbar v-model="snackbar" :color="snackbarColor">
             {{ snackbarMessage }}
           </VSnackbar>
