@@ -129,7 +129,19 @@ const totalAlunos = async () => {
 
     total_alunos.value = res;
   } catch (err) {
-    console.error("Erro ao buscar utilizadores:", err);
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalProfessores = async () => {
+  try {
+    const res = await $api("/professores/totais", {
+      method: "GET",
+    });
+
+    total_professores.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
   }
 };
 
@@ -153,6 +165,7 @@ watch([searchQuery], filterUtilizadores);
 const atualizarDados = () => {
   fetchUtilizadores();
   totalUtilizadores();
+  totalProfessores();
   totalAlunos();
 };
 

@@ -169,11 +169,13 @@ const fetchAlunos = async () => {
 const filterAlunos = () => {
   filteredAlunos.value = alunos.value.filter((aluno) => {
     const matchesSearch =
-  
       aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.distritoNascimento.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.bilheteIdentificacao.toLowerCase()
-.includes(searchQuery.value.toLowerCase()) ||
+      aluno.distritoNascimento
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      aluno.bilheteIdentificacao
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
       aluno.dataNascimento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
@@ -296,7 +298,7 @@ const totalSuspensos = async () => {
 
 const totalExpulsos = async () => {
   try {
-    const res = await $api("/alunos/estado/Graduado", {
+    const res = await $api("/alunos/estado/Expulso", {
       method: "GET",
     });
 

@@ -1,5 +1,6 @@
 <script setup>
-import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
+import CadastrarProfessor from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
+import EditarProfessor from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -14,21 +15,67 @@ const selectedRows = ref([]);
 const alunos = ref([]);
 const distritos = ref([]);
 const filteredAlunos = ref([]);
-const total_alunos = ref(0);
-const total_matriculados = ref(0);
-const total_transferidos = ref(0);
-const token = useCookie("accessToken").value;
 
-const updateOptions = (options) => {
-  page.value = options.page;
-  sortBy.value = options.sortBy[0]?.key;
-  orderBy.value = options.sortBy[0]?.order;
-};
+const total_professores = ref(0);
+const total_activos = ref(0);
+const total_transferidos = ref(0);
+const total_expulsos = ref(0);
+const total_suspensos = ref(0);
+const total_reformados = ref(0);
+
+const isCadastrarProfessorVisible = ref(false);
+const isEditarProfessorVisible = ref(false);
+
+const mini_estatisticas = ref([
+  {
+    title: "Todos Professores",
+    value: total_professores,
+    desc: "Professores cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+  {
+    title: "Activos",
+    value: total_activos,
+    desc: "Professores Activos",
+    icon: "ri-user-follow-line",
+    iconColor: "success",
+  },
+  {
+    title: "Transferidos",
+    value: total_transferidos,
+    desc: "Professores transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+  {
+    title: "Reformados",
+    value: total_reformados,
+    desc: "Professores cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+  {
+    title: "Suspensos",
+    value: total_suspensos,
+    desc: "Professores transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+  {
+    title: "Expulsos",
+    value: total_expulsos,
+    desc: "Professores transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+]);
 
 const headers = [
-  { title: "Aluno", key: "id", sortable: true },
+  { title: "Professor", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
+  { title: "Provincia", key: "provinciaNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
   { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
@@ -37,37 +84,10 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
-const fetchDistritos = async () => {
-  try {
-    const res = await $api("/distritos", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // Passar o token corretamente
-      },
-    });
-
-    distritos.value = res.map((distrito) => ({
-      id: distrito.id,
-      nome: distrito.nome,
-      provincia: distrito.provincia,
-    }));
-
-    filterAlunos();
-    distritos.value = distritos.value.map((distrito) => ({
-      title: distrito.nome,
-      value: distrito.nome,
-    }));
-  } catch (err) {
-    console.error("Erro ao buscar utilizadores:", err);
-  }
-};
-
 const sexo = [
   { title: "Masculino", value: "M" },
   { title: "Feminino", value: "F" },
 ];
-
-fetchDistritos();
 
 const estado = [
   { title: "Matriculado", value: "Matriculado" },
@@ -78,133 +98,189 @@ const estado = [
   { title: "Desistente", value: "Desistente" },
 ];
 
-const fetchAlunos = async () => {
-  try {
-    const res = await $api("/alunos", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    alunos.value = res.map((aluno) => ({
-      id: aluno.id,
-      nome: aluno.nomeCompleto,
-      dataNascimento: aluno.dataNascimento,
-      distritoNascimento: aluno.distritoNascimento,
-      bilheteIdentificacao: aluno.bilheteIdentificacao,
-      numeroTelefonePrincipal: aluno.numeroTelefonePrincipal,
-      sexo: aluno.sexo,
-      estado: aluno.estado,
-    }));
-
-    filterAlunos();
-  } catch (err) {
-    console.error("Erro ao buscar alunos:", err);
-  }
-};
-
-const filterAlunos = () => {
-  filteredAlunos.value = alunos.value.filter((aluno) => {
-    const matchesSearch =
-      aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.distritoNascimento
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase()) ||
-      aluno.bilheteIdentificacao
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase()) ||
-      aluno.dataNascimento
-        .toLowerCase()
-        .includes(searchQuery.value.toLowerCase()) ||
-      aluno.estado.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
-
-    const matchesDistrito =
-      !selectedDistrito.value ||
-      aluno.distritoNascimento === selectedDistrito.value;
-    const matchesEstado =
-      !selectedEstado.value || aluno.estado === selectedEstado.value;
-    const matchesSexo =
-      !selectedSexo.value || aluno.sexo === selectedSexo.value;
-
-    return matchesSearch && matchesDistrito && matchesEstado && matchesSexo;
-  });
-};
-
 const paginatedAlunos = computed(() => {
   const start = (page.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   return filteredAlunos.value.slice(start, end);
 });
 
-watch(
-  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
-  filterAlunos
-);
-
-const totalAlunos = async () => {
+const fetchDistritos = async () => {
   try {
-    const res = await $api("/alunos/totais", {
+    const res = await $api("/distritos", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
-    total_alunos.value = res;
+    distritos.value = res.map((distrito) => ({
+      id: distrito.id,
+      nome: distrito.nome,
+      provincia: distrito.provincia,
+    }));
+
+    filterProfessores();
+    distritos.value = distritos.value.map((distrito) => ({
+      title: distrito.nome,
+      value: distrito.nome,
+    }));
   } catch (err) {
-    console.error("Erro ao buscar alunos:", err);
+    console.error("Erro ao buscar professores:", err);
   }
 };
 
-const atualizarDados = () => {
-  fetchAlunos();
-  totalAlunos();
+const fetchProfessores = async () => {
+  try {
+    const res = await $api("/professores", {
+      method: "GET",
+    });
+
+    alunos.value = res.map((professor) => ({
+      id: professor.id,
+      nome: professor.nomeCompleto,
+      dataNascimento: professor.dataNascimento,
+      distritoNascimento: professor.distritoNascimento,
+      provinciaNascimento: professor.provinciaNascimento,
+      bilheteIdentificacao: professor.bilheteIdentificacao,
+      numeroTelefonePrincipal: professor.numeroTelefonePrincipal,
+      sexo: professor.sexo,
+      estado: professor.estado,
+    }));
+
+    filterProfessores();
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
 };
 
-const deleteAluno = async (id) => {
-  await $api(`/alunos/remover/${id}`, { method: "DELETE" });
+const filterProfessores = () => {
+  filteredAlunos.value = alunos.value.filter((professor) => {
+    const matchesSearch =
+      professor.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      professor.distritoNascimento
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      professor.bilheteIdentificacao
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      professor.dataNascimento
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      professor.estado
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      professor.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
 
-  const index = selectedRows.value.findIndex((row) => row === id);
-  if (index !== -1) selectedRows.value.splice(index, 1);
+    const matchesDistrito =
+      !selectedDistrito.value ||
+      professor.distritoNascimento === selectedDistrito.value;
+    const matchesEstado =
+      !selectedEstado.value || professor.estado === selectedEstado.value;
+    const matchesSexo =
+      !selectedSexo.value || professor.sexo === selectedSexo.value;
 
-  fetchAlunos();
+    return matchesSearch && matchesDistrito && matchesEstado && matchesSexo;
+  });
 };
 
-const mini_estatisticas = ref([
-  {
-    title: "Todos Alunos",
-    value: total_alunos,
-    desc: "Alunos cadastrados",
-    icon: "ri-group-line",
-    iconColor: "primary",
-  },
-  {
-    title: "Matriculados",
-    value: total_matriculados,
-    desc: "Alunos matriculados",
-    icon: "ri-user-follow-line",
-    iconColor: "success",
-  },
-  {
-    title: "Transferidos",
-    value: total_transferidos,
-    desc: "Alunos transferidos",
-    icon: "ri-user-search-line",
-    iconColor: "warning",
-  },
-]);
+const totalProfessores = async () => {
+  try {
+    const res = await $api("/professores/totais", {
+      method: "GET",
+    });
 
-const isCadastrarAlunoVisible = ref(false);
+    total_professores.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
 
-const cadastrarAluno = async (userData) => {
-  await $api("/autenticacao/cadastro", {
+const cadastrarProfessor = async (userData) => {
+  await $api("/professores/cadastrar", {
     method: "POST",
     body: userData,
   });
 
-  fetchAlunos();
+  fetchProfessores();
+};
+
+const totalActivos = async () => {
+  try {
+    const res = await $api("/professores/estado/Activo", {
+      method: "GET",
+    });
+
+    total_activos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const totaTransferidos = async () => {
+  try {
+    const res = await $api("/professores/estado/Transferido", {
+      method: "GET",
+    });
+
+    total_transferidos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const totalReformados = async () => {
+  try {
+    const res = await $api("/professores/estado/Reformado", {
+      method: "GET",
+    });
+
+    total_reformados.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const totalSuspensos = async () => {
+  try {
+    const res = await $api("/professores/estado/Suspenso", {
+      method: "GET",
+    });
+
+    total_suspensos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const totalExpulsos = async () => {
+  try {
+    const res = await $api("/professores/estado/Graduado", {
+      method: "GET",
+    });
+
+    total_expulsos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const updateOptions = (options) => {
+  page.value = options.page;
+  sortBy.value = options.sortBy[0]?.key;
+  orderBy.value = options.sortBy[0]?.order;
+};
+
+watch(
+  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
+  filterProfessores
+);
+
+const atualizarDados = () => {
+  fetchProfessores();
+  totalProfessores();
+  totaTransferidos();
+  totalActivos();
+  totalReformados();
+  totalExpulsos();
+  totalSuspensos();
+  fetchDistritos();
 };
 
 atualizarDados();
@@ -246,7 +322,7 @@ atualizarDados();
 
     <VCard class="mb-6">
       <VCardItem class="pb-4">
-        <VCardTitle>Filtrar Alunos</VCardTitle>
+        <VCardTitle>Filtrar Professores</VCardTitle>
       </VCardItem>
       <VCardText>
         <VRow>
@@ -302,7 +378,9 @@ atualizarDados();
             />
           </div>
 
-          <VBtn @click="isCadastrarAlunoVisible = true">Cadastrar Aluno</VBtn>
+          <VBtn @click="isCadastrarProfessorVisible = true"
+            >Cadastrar Professor</VBtn
+          >
         </div>
       </VCardText>
     </VCard>
@@ -322,7 +400,7 @@ atualizarDados();
           <IconBtn
             size="small"
             :to="{
-              name: 'utilizadores-estudantes-detalhes-id',
+              name: 'utilizadores-professores-detalhes-id',
               params: { id: item.id },
             }"
           >
@@ -333,15 +411,20 @@ atualizarDados();
             icon="ri-edit-2-line"
             :icon-color="success"
             variant="plain"
-            @click="isCadastrarAlunoVisible = true"
+            @click="isEditarProfessorVisible = true"
           />
         </template>
       </VDataTableServer>
     </VCard>
     <!-- Cadastrar estudante modal -->
-    <CadastrarEstudante
-      v-model:isDrawerOpen="isCadastrarAlunoVisible"
-      @user-data="cadastrarAluno"
+    <CadastrarProfessor
+      v-model:isDrawerOpen="isCadastrarProfessorVisible"
+      @user-data="cadastrarProfessor"
+    />
+
+    <EditarProfessor
+      v-model:isDrawerOpen="isCadastrarProfessorVisible"
+      @user-data="cadastrarProfessor"
     />
   </section>
 </template>

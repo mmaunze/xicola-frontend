@@ -8,7 +8,7 @@ import Mensalidades from "@/views/utilizadores/estudantes/detalhes/Mensalidades.
 import Sobre from "@/views/utilizadores/estudantes/detalhes/Sobre.vue";
 import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-estudantes-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
+const route = useRoute("utilizadores-professores-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
 const userTab = ref(null);
 const userData = ref(null); // Para armazenar os dados do aluno
 
@@ -64,7 +64,7 @@ const tabs = [
 // Função para buscar os dados do aluno
 const fetchAluno = async () => {
   try {
-    const res = await $api(`/alunos/aluno/${route.params.id}`, {
+    const res = await $api(`/professores/professor/${route.params.id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
