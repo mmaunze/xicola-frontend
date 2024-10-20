@@ -95,8 +95,8 @@ const headers = [
 ];
 
 const sexo = [
-  { title: "Masculino", value: "M" },
-  { title: "Feminino", value: "F" },
+  { title: "Masculino", value: "Masculino" },
+  { title: "Feminino", value: "Feminino" },
 ];
 
 const estado = [

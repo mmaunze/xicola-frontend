@@ -1,10 +1,10 @@
 <script setup>
-import CadastrarProfessor from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
+import CadastrarProfessor from "@/views/utilizadores/professores/CadastrarProfessor.vue";
 import EditarProfessor from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
-const selectedSexo = ref(null);
+const selectedAreaFormacao = ref(null);
 const selectedEstado = ref(null);
 
 const itemsPerPage = ref(5);
@@ -14,6 +14,7 @@ const orderBy = ref();
 const selectedRows = ref([]);
 const alunos = ref([]);
 const distritos = ref([]);
+const areas_cientificas = ref([]);
 const filteredAlunos = ref([]);
 
 const total_professores = ref(0);
@@ -28,44 +29,44 @@ const isEditarProfessorVisible = ref(false);
 
 const mini_estatisticas = ref([
   {
-    title: "Todos Professores",
+    title: "Todos professores",
     value: total_professores,
-    desc: "Professores cadastrados",
+    desc: "professores cadastrados",
     icon: "ri-group-line",
     iconColor: "primary",
   },
   {
     title: "Activos",
     value: total_activos,
-    desc: "Professores Activos",
+    desc: "professores Activos",
     icon: "ri-user-follow-line",
     iconColor: "success",
   },
   {
     title: "Transferidos",
     value: total_transferidos,
-    desc: "Professores transferidos",
+    desc: "professores transferidos",
     icon: "ri-user-search-line",
     iconColor: "warning",
   },
   {
     title: "Reformados",
     value: total_reformados,
-    desc: "Professores cadastrados",
+    desc: "professores cadastrados",
     icon: "ri-group-line",
     iconColor: "primary",
   },
   {
     title: "Suspensos",
     value: total_suspensos,
-    desc: "Professores transferidos",
+    desc: "professores transferidos",
     icon: "ri-user-search-line",
     iconColor: "warning",
   },
   {
     title: "Expulsos",
     value: total_expulsos,
-    desc: "Professores transferidos",
+    desc: "professores transferidos",
     icon: "ri-user-search-line",
     iconColor: "warning",
   },
@@ -75,8 +76,8 @@ const headers = [
   { title: "Professor", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
-  { title: "Provincia", key: "provinciaNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
+  { title: "Area de Formacao", key: "areaFormacao", sortable: true },
   { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
   { title: "Nº Telefone", key: "numeroTelefonePrincipal", sortable: true },
@@ -90,7 +91,7 @@ const sexo = [
 ];
 
 const estado = [
-  { title: "Matriculado", value: "Matriculado" },
+  { title: "Activo", value: "Activo" },
   { title: "Transferido", value: "Transferido" },
   { title: "Graduado", value: "Graduado" },
   { title: "Suspenso", value: "Suspenso" },
@@ -116,7 +117,7 @@ const fetchDistritos = async () => {
       provincia: distrito.provincia,
     }));
 
-    filterProfessores();
+    filterprofessores();
     distritos.value = distritos.value.map((distrito) => ({
       title: distrito.nome,
       value: distrito.nome,
@@ -126,7 +127,28 @@ const fetchDistritos = async () => {
   }
 };
 
-const fetchProfessores = async () => {
+const fetchAreasCientificas = async () => {
+  try {
+    const res = await $api("/geral/areas-cientificas", {
+      method: "GET",
+    });
+
+    areas_cientificas.value = res.map((area) => ({
+      id: area.id,
+      nome: area.nome,
+    }));
+
+    filterprofessores();
+    areas_cientificas.value = areas_cientificas.value.map((area) => ({
+      title: area.nome,
+      value: area.nome,
+    }));
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const fetchprofessores = async () => {
   try {
     const res = await $api("/professores", {
       method: "GET",
@@ -139,18 +161,19 @@ const fetchProfessores = async () => {
       distritoNascimento: professor.distritoNascimento,
       provinciaNascimento: professor.provinciaNascimento,
       bilheteIdentificacao: professor.bilheteIdentificacao,
+      areaFormacao: professor.areaFormacao,
       numeroTelefonePrincipal: professor.numeroTelefonePrincipal,
       sexo: professor.sexo,
       estado: professor.estado,
     }));
 
-    filterProfessores();
+    filterprofessores();
   } catch (err) {
     console.error("Erro ao buscar professores:", err);
   }
 };
 
-const filterProfessores = () => {
+const filterprofessores = () => {
   filteredAlunos.value = alunos.value.filter((professor) => {
     const matchesSearch =
       professor.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -166,21 +189,26 @@ const filterProfessores = () => {
       professor.estado
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
-      professor.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
+      professor.areaFormacao
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase());
 
     const matchesDistrito =
       !selectedDistrito.value ||
       professor.distritoNascimento === selectedDistrito.value;
     const matchesEstado =
       !selectedEstado.value || professor.estado === selectedEstado.value;
-    const matchesSexo =
-      !selectedSexo.value || professor.sexo === selectedSexo.value;
+    const matchesAraFormacao =
+      !selectedAreaFormacao.value ||
+      professor.areaFormacao === selectedAreaFormacao.value;
 
-    return matchesSearch && matchesDistrito && matchesEstado && matchesSexo;
+    return (
+      matchesSearch && matchesDistrito && matchesEstado && matchesAraFormacao
+    );
   });
 };
 
-const totalProfessores = async () => {
+const totalprofessores = async () => {
   try {
     const res = await $api("/professores/totais", {
       method: "GET",
@@ -198,7 +226,7 @@ const cadastrarProfessor = async (userData) => {
     body: userData,
   });
 
-  fetchProfessores();
+  fetchprofessores();
 };
 
 const totalActivos = async () => {
@@ -268,15 +296,16 @@ const updateOptions = (options) => {
 };
 
 watch(
-  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
-  filterProfessores
+  [searchQuery, selectedDistrito, selectedAreaFormacao, selectedEstado],
+  filterprofessores
 );
 
 const atualizarDados = () => {
-  fetchProfessores();
-  totalProfessores();
+  fetchprofessores();
+  totalprofessores();
   totaTransferidos();
   totalActivos();
+  fetchAreasCientificas();
   totalReformados();
   totalExpulsos();
   totalSuspensos();
@@ -322,7 +351,7 @@ atualizarDados();
 
     <VCard class="mb-6">
       <VCardItem class="pb-4">
-        <VCardTitle>Filtrar Professores</VCardTitle>
+        <VCardTitle>Filtrar professores</VCardTitle>
       </VCardItem>
       <VCardText>
         <VRow>
@@ -330,18 +359,18 @@ atualizarDados();
             <VAutocomplete
               v-model="selectedDistrito"
               label="Seleccionar o distrito de nascenca"
-              placeholder="Seleccionar tipo de Utilizador"
+              placeholder="Seleccionar o distrito de nascenca"
               :items="distritos"
               clearable
               clear-icon="ri-close-line"
             />
           </VCol>
           <VCol cols="12" sm="4">
-            <VSelect
-              v-model="selectedSexo"
-              label="Selecionar Sexo"
-              placeholder="Escolher Sexo"
-              :items="sexo"
+            <VAutocomplete
+              v-model="selectedAreaFormacao"
+              label="Seleccionar area de formacao"
+              placeholder="Seleccionar area de formacao do professor"
+              :items="areas_cientificas"
               clearable
               clear-icon="ri-close-line"
             />
@@ -373,7 +402,7 @@ atualizarDados();
           <div class="app-user-search-filter">
             <VTextField
               v-model="searchQuery"
-              placeholder="Buscar aluno"
+              placeholder="Buscar Professor"
               density="compact"
             />
           </div>

@@ -4,8 +4,34 @@ const token = useCookie("accessToken").value;
 const distritos = ref([]);
 const selectedDistrito = ref(null);
 
-const opcoesEstado = ["Matriculado", "Transferido", "Graduado", "Suspenso", "Expulso", "Desistente"];
-const opcoesReligiao = ["Cristã", "Muçulmana", "Hindu", "Outra"];
+const opcoesEstado = [
+  "Matriculado",
+  "Transferido",
+  "Graduado",
+  "Suspenso",
+  "Expulso",
+  "Desistente",
+];
+const opcoesReligiao = [
+  "Cristã",
+  "Católica",
+  "Evangélica",
+  "Adventista",
+  "Protestante",
+  "Ortodoxa",
+  "Muçulmana",
+  "Sunita",
+  "Xiita",
+  "Hindu",
+  "Budista",
+  "Judaica",
+  "Espírita",
+  "Mórmon",
+  "Testemunhas de Jeová",
+  "Ateu",
+  "Agnóstico",
+  "Outra",
+];
 
 const props = defineProps({
   userData: {
@@ -227,13 +253,11 @@ buscarDistritos();
               />
             </VCol>
 
-          
-
             <!-- Estado -->
             <VCol cols="12" md="6">
               <VSelect
                 v-model="userData.estado"
-                :items=opcoesEstado
+                :items="opcoesEstado"
                 label="Estado"
                 placeholder="Estado actual"
               />

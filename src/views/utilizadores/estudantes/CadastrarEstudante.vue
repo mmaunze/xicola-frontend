@@ -1,13 +1,12 @@
 <script setup>
+import { nextTick, ref } from "vue";
 import { PerfectScrollbar } from "vue3-perfect-scrollbar";
-import { ref, nextTick } from "vue";
 import { VAutocomplete } from "vuetify/components";
-
 
 const token = useCookie("accessToken").value;
 
 const distritos = ref([]);
-const selectedDistrito = ref(null); 
+const selectedDistrito = ref(null);
 
 const props = defineProps({
   isDrawerOpen: {
@@ -35,7 +34,27 @@ const numeroTelefonePrincipal = ref("");
 
 // Arrays de opções conhecidas
 const opcoesSexo = ["M", "F"];
-const opcoesReligiao = ["Cristã", "Muçulmana", "Hindu", "Outra"];
+const opcoesReligiao = [
+  "Cristã",
+  "Católica",
+  "Evangélica",
+  "Adventista",
+  "Protestante",
+  "Ortodoxa",
+  "Muçulmana",
+  "Sunita",
+  "Xiita",
+  "Hindu",
+  "Budista",
+  "Judaica",
+  "Espírita",
+  "Mórmon",
+  "Testemunhas de Jeová",
+  "Ateu",
+  "Agnóstico",
+  "Outra",
+];
+
 const opcoesGrupoSanguineo = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 // Snackbar para exibir mensagens de sucesso ou erro
@@ -65,7 +84,6 @@ const registerStudent = async (studentData) => {
     });
 
     return response; // Retornar a resposta da API
-
   } catch (error) {
     console.error("Erro ao cadastrar estudante:", error);
     throw new Error("Erro ao cadastrar estudante"); // Lançar erro para ser tratado na submissão
@@ -79,7 +97,7 @@ const onSubmit = async () => {
       const studentData = {
         nomeCompleto: nomeCompleto.value,
         dataNascimento: dataNascimento.value,
-        distritoNascimento: selectedDistrito.value, 
+        distritoNascimento: selectedDistrito.value,
         sexo: sexo.value,
         bilheteIdentificacao: bilheteIdentificacao.value,
         religiao: religiao.value,
@@ -109,7 +127,8 @@ const onSubmit = async () => {
       }
     } else {
       // Exibir mensagem de erro se a validação falhar
-      snackbarMessage.value = "Por favor, preencha todos os campos obrigatórios corretamente.";
+      snackbarMessage.value =
+        "Por favor, preencha todos os campos obrigatórios corretamente.";
       snackbarColor.value = "error";
       snackbar.value = true;
     }
@@ -142,7 +161,8 @@ const buscarDistritos = async () => {
     }));
   } catch (err) {
     console.error("Erro ao buscar distritos:", err);
-    snackbarMessage.value = "Erro ao buscar distritos. Tente novamente mais tarde.";
+    snackbarMessage.value =
+      "Erro ao buscar distritos. Tente novamente mais tarde.";
     snackbarColor.value = "error";
     snackbar.value = true;
   }

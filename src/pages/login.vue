@@ -60,9 +60,11 @@ const login = async () => {
     cookie.value = accessToken;
 
     const userData = {
-      name: response.username,
+      nome: response.nome,
+      username: response.username,
       email: response.email,
-      role: response.roles[0], // Supondo que roles seja uma lista
+      role: response.roles[0], 
+      // Supondo que roles seja uma lista
     };
 
     localStorage.setItem("userData", JSON.stringify(userData));

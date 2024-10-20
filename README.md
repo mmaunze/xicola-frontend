@@ -177,5 +177,3 @@ src/
 ├── plugins/        # Plugins Vue.js
 └── App.vue         # Componente raiz
 ```
-
-

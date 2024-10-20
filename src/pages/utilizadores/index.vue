@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, watch } from "vue";
 import CadastrarUtilizador from "@/views/utilizadores/list/CadastrarUtilizador.vue";
+import { computed, ref, watch } from "vue";
 
 const searchQuery = ref("");
 const selectedTipoUtilizador = ref(null);
@@ -40,7 +40,7 @@ const mini_estatisticas = ref([
     iconColor: "success",
   },
   {
-    title: "Professores",
+    title: "professores",
     value: total_professores,
     desc: "professores cadastrados",
     icon: "ri-user-search-line",
@@ -55,7 +55,7 @@ const mini_estatisticas = ref([
   },
 ]);
 
-const roles = ["Estudante", "Professor","Encarregado"]
+const roles = ["Estudante", "Professor", "Encarregado"];
 
 const headers = [
   { title: "Nome Completo", key: "nome", sortable: true },
@@ -98,10 +98,12 @@ const filterUtilizadores = () => {
   filteredAlunos.value = alunos.value.filter((utilizador) => {
     const matchesSearch =
       utilizador.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      utilizador.username.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      utilizador.username
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
       utilizador.email.toLowerCase().includes(searchQuery.value.toLowerCase());
 
-      const matchesTipoUtilizador =
+    const matchesTipoUtilizador =
       !selectedTipoUtilizador.value ||
       utilizador.role === selectedTipoUtilizador.value;
 
@@ -133,7 +135,7 @@ const totalAlunos = async () => {
   }
 };
 
-const totalProfessores = async () => {
+const totalprofessores = async () => {
   try {
     const res = await $api("/professores/totais", {
       method: "GET",
@@ -165,7 +167,7 @@ watch([searchQuery], filterUtilizadores);
 const atualizarDados = () => {
   fetchUtilizadores();
   totalUtilizadores();
-  totalProfessores();
+  totalprofessores();
   totalAlunos();
 };
 

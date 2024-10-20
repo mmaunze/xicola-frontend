@@ -1,6 +1,6 @@
 <script setup>
+import { nextTick, ref } from "vue";
 import { PerfectScrollbar } from "vue3-perfect-scrollbar";
-import { ref, nextTick } from "vue";
 import { VAutocomplete } from "vuetify/components";
 
 const token = useCookie("accessToken").value;
@@ -34,7 +34,27 @@ const numeroTelefonePrincipal = ref("");
 
 // Arrays de opções conhecidas
 const opcoesSexo = ["M", "F"];
-const opcoesReligiao = ["Cristã", "Muçulmana", "Hindu", "Outra"];
+const opcoesReligiao = [
+  "Cristã",
+  "Católica",
+  "Evangélica",
+  "Adventista",
+  "Protestante",
+  "Ortodoxa",
+  "Muçulmana",
+  "Sunita",
+  "Xiita",
+  "Hindu",
+  "Budista",
+  "Judaica",
+  "Espírita",
+  "Mórmon",
+  "Testemunhas de Jeová",
+  "Ateu",
+  "Agnóstico",
+  "Outra",
+];
+
 const opcoesGrupoSanguineo = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
 // 👉 drawer close
@@ -179,7 +199,7 @@ buscarDistritos();
                   v-model="bilheteIdentificacao"
                   label="Bilhete de Identificação"
                   placeholder="Número do Bilhete"
-                   :rules="[requiredValidator,lengthValidator(5,13)]"
+                  :rules="[requiredValidator, lengthValidator(5, 13)]"
                 />
               </VCol>
 
@@ -190,7 +210,7 @@ buscarDistritos();
                   :items="opcoesReligiao"
                   label="Religião"
                   placeholder="Selecione a religião"
-                   :rules="[requiredValidator]"
+                  :rules="[requiredValidator]"
                 />
               </VCol>
 

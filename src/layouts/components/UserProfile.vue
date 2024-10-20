@@ -94,7 +94,7 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
 
               <div>
                 <div class="text-body-2 font-weight-medium text-high-emphasis">
-                  {{storedUserData.name}}
+                  {{storedUserData.nome}}
                 </div>
                 <div class="text-capitalize text-caption text-disabled">
                   {{  storedUserData.email }}
