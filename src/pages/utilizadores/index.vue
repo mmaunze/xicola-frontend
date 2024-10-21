@@ -177,7 +177,7 @@ const getIconBtnProps = (item) => {
   if (item.role === "Estudante") {
     return {
       to: {
-        name: "utilizadores-estudantes-detalhes-id",
+        name: "utilizadores-alunos-detalhes-id",
         params: { id: item.id },
       },
     };

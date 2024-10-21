@@ -1,5 +1,5 @@
-export const staticPrimaryColor = '#6EACDA'
-export const staticPrimaryDarkenColor = '#03346E'
+export const staticPrimaryColor = '#FDB528'
+export const staticPrimaryDarkenColor = '#E4A324'
 export const themes = {
   light: {
     dark: false,
@@ -44,7 +44,7 @@ export const themes = {
       'chat-bg': '#F7F6FA',
     },
     variables: {
-      'code-color': '#4B70F5',
+      'code-color': '#3B49E6',
       'overlay-scrim-background': '#262B43',
       'tooltip-background': '#282A42',
       'overlay-scrim-opacity': 0.5,
@@ -106,14 +106,14 @@ export const themes = {
       'grey-800': '#CFD3EC',
       'grey-900': '#E7E9F6',
       'perfect-scrollbar-thumb': '#4a5072',
-      'skin-bordered-background': '#30334E',
-      'skin-bordered-surface': '#30334E',
+      'skin-bordered-background': '#202124',
+      'skin-bordered-surface': '#202124',
       'expansion-panel-text-custom-bg': '#333851',
       'track-bg': '#3C3F59',
       'chat-bg': '#343752',
     },
     variables: {
-      'code-color': '#4B70F5',
+      'code-color': '#3B49E6',
       'overlay-scrim-background': '#101121',
       'tooltip-background': '#F5F5F5',
       'overlay-scrim-opacity': 0.6,
@@ -126,7 +126,7 @@ export const themes = {
       'dragged-opacity': 0.1,
       'border-color': '#EAEAFF',
       'border-opacity': 0.12,
-      'table-header-color': '#3A3E5B',
+      'table-header-color': '#181A1F',
       'high-emphasis-opacity': 0.9,
       'medium-emphasis-opacity': 0.7,
 

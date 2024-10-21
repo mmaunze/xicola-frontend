@@ -8,9 +8,9 @@ import Mensalidades from "@/views/utilizadores/encarregados/detalhes/Mensalidade
 import Sobre from "@/views/utilizadores/encarregados/detalhes/Sobre.vue";
 import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-encarregados-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
+const route = useRoute("utilizadores-encarregados-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-alunos-detalhes-id"
 const userTab = ref(null);
-const userData = ref(null); 
+const userData = ref(null);
 
 const token = useCookie("accessToken").value;
 
@@ -61,17 +61,17 @@ const tabs = [
   },
 ];
 
-
 const fetchEncarregado = async () => {
   try {
-    const res = await $api(`/encarregados-educacao/encarregado/${route.params.id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-   
+    const res = await $api(
+      `/encarregados-educacao/encarregado/${route.params.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     if (res) {
       userData.value = {
@@ -86,7 +86,7 @@ const fetchEncarregado = async () => {
         grupoSanguineo: res.grupoSanguineo,
         endereco: res.endereco,
         dataRegisto: res.dataRegisto,
-        localTrabalho: res.localTrabalho, 
+        localTrabalho: res.localTrabalho,
         sectorTrabalho: res.sectorTrabalho,
         bilheteIdentificacao: res.bilheteIdentificacao,
         numeroTelefonePrincipal: res.numeroTelefonePrincipal,
@@ -101,19 +101,16 @@ const fetchEncarregado = async () => {
   }
 };
 
-
 onMounted(() => {
   fetchEncarregado();
 });
 </script>
 <template>
   <VRow v-if="userData">
-   
     <VCol cols="12" md="5" lg="4">
       <Sobre :user-data="userData" />
     </VCol>
 
-   
     <VCol cols="12" md="7" lg="8">
       <VTabs v-model="userTab" class="v-tabs-pill">
         <VTab v-for="tab in tabs" :key="tab.icon">
@@ -122,7 +119,6 @@ onMounted(() => {
         </VTab>
       </VTabs>
 
-    
       <VWindow
         v-model="userTab"
         class="mt-6 disable-tab-transition"
@@ -155,7 +151,6 @@ onMounted(() => {
     </VCol>
   </VRow>
 
-  
   <div v-else>
     <VAlert type="error" variant="tonal">
       Encarregado {{ route.params.id }} não encontrado!

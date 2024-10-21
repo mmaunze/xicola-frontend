@@ -33,7 +33,7 @@ const nomeDaMae = ref("");
 const numeroTelefonePrincipal = ref("");
 
 // Arrays de opções conhecidas
-const opcoesSexo = ["M", "F"];
+const opcoesSexo = ["Masculino", "Feminino"];
 const opcoesReligiao = [
   "Cristã",
   "Católica",

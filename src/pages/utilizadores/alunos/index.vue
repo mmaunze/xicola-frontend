@@ -1,13 +1,13 @@
 <script setup>
-import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
-import EditarEstudante from "@/views/utilizadores/estudantes/EditarEstudante.vue";
+import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarAluno.vue";
+import EditarEstudante from "@/views/utilizadores/estudantes/EditarAluno.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
 const selectedSexo = ref(null);
 const selectedEstado = ref(null);
 
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(8);
 const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
@@ -446,7 +446,7 @@ atualizarDados();
           <IconBtn
             size="small"
             :to="{
-              name: 'utilizadores-estudantes-detalhes-id',
+              name: 'utilizadores-alunos-detalhes-id',
               params: { id: item.id },
             }"
           >

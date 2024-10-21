@@ -16,7 +16,7 @@ export default [
       },
       {
         title: "Alunos",
-        to: { name: "utilizadores-estudantes" },
+        to: { name: "utilizadores-alunos" },
         icon: { icon: "ri-account-circle-fill" },
       },
       {

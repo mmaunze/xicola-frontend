@@ -1,13 +1,13 @@
 <script setup>
+import EditarProfessor from "@/views/utilizadores/estudantes/EditarAluno.vue";
 import CadastrarProfessor from "@/views/utilizadores/professores/CadastrarProfessor.vue";
-import EditarProfessor from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
 const selectedAreaFormacao = ref(null);
 const selectedEstado = ref(null);
 
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(8);
 const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();

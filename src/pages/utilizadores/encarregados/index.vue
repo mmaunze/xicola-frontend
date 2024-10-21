@@ -1,13 +1,13 @@
 <script setup>
+import EditarEncarregado from "@/views/utilizadores/estudantes/EditarAluno.vue";
 import CadastrarEncarregado from "@/views/utilizadores/professores/CadastrarProfessor.vue";
-import EditarEncarregado from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
 const selectedASectorTrabalho = ref(null);
 const selectedEstado = ref(null);
 
-const itemsPerPage = ref(5);
+const itemsPerPage = ref(8);
 const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
@@ -152,7 +152,9 @@ const fetchEncarregados = async () => {
 const filterEncarregados = () => {
   filteredEncarregados.value = alunos.value.filter((encarregado) => {
     const matchesSearch =
-      encarregado.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      encarregado.nome
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
       encarregado.distritoNascimento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
@@ -240,8 +242,6 @@ const totalReformados = async () => {
     console.error("Erro ao buscar encarregados:", err);
   }
 };
-
-
 
 const updateOptions = (options) => {
   page.value = options.page;
@@ -397,7 +397,7 @@ atualizarDados();
         </template>
       </VDataTableServer>
     </VCard>
-   
+
     <CadastrarEncarregado
       v-model:isDrawerOpen="isCadastrarEncarregadoVisible"
       @user-data="cadastrarEncarregado"

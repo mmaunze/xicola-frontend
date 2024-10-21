@@ -1,5 +1,5 @@
 <script setup>
-import EditarEstudante from "../EditarEstudante.vue";
+import EditarEstudante from "../EditarAluno.vue";
 
 const props = defineProps({
   userData: {

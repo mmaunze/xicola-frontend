@@ -25,11 +25,11 @@ declare module 'vue-router/auto-routes' {
     'not-authorized': RouteRecordInfo<'not-authorized', '/not-authorized', Record<never, never>, Record<never, never>>,
     'register': RouteRecordInfo<'register', '/register', Record<never, never>, Record<never, never>>,
     'utilizadores': RouteRecordInfo<'utilizadores', '/utilizadores', Record<never, never>, Record<never, never>>,
+    'utilizadores-alunos': RouteRecordInfo<'utilizadores-alunos', '/utilizadores/alunos', Record<never, never>, Record<never, never>>,
+    'utilizadores-alunos-detalhes-id': RouteRecordInfo<'utilizadores-alunos-detalhes-id', '/utilizadores/alunos/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-detalhes-id': RouteRecordInfo<'utilizadores-detalhes-id', '/utilizadores/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-encarregados': RouteRecordInfo<'utilizadores-encarregados', '/utilizadores/encarregados', Record<never, never>, Record<never, never>>,
     'utilizadores-encarregados-detalhes-id': RouteRecordInfo<'utilizadores-encarregados-detalhes-id', '/utilizadores/encarregados/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
-    'utilizadores-estudantes': RouteRecordInfo<'utilizadores-estudantes', '/utilizadores/estudantes', Record<never, never>, Record<never, never>>,
-    'utilizadores-estudantes-detalhes-id': RouteRecordInfo<'utilizadores-estudantes-detalhes-id', '/utilizadores/estudantes/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-professores': RouteRecordInfo<'utilizadores-professores', '/utilizadores/professores', Record<never, never>, Record<never, never>>,
     'utilizadores-professores-detalhes-id': RouteRecordInfo<'utilizadores-professores-detalhes-id', '/utilizadores/professores/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }

@@ -2,7 +2,7 @@
 import Sobre from "@/views/utilizadores/detalhes/Sobre.vue";
 import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
+const route = useRoute("utilizadores-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-alunos-detalhes-id"
 const userTab = ref(null);
 const userData = ref(null); // Para armazenar os dados do aluno
 
