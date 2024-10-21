@@ -58,7 +58,6 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     popoverOffset: 4,
   },
 
-
   icons: {
     chevronDown: { icon: 'ri-arrow-down-s-line' },
     chevronRight: { icon: 'ri-arrow-right-s-line' },

@@ -36,56 +36,58 @@ const props = defineProps({
     required: false,
     default: undefined,
   },
-})
+});
 
 const emit = defineEmits([
-  'collapsed',
-  'refresh',
-  'trash',
-  'initialLoad',
-  'update:loading',
-])
+  "collapsed",
+  "refresh",
+  "trash",
+  "initialLoad",
+  "update:loading",
+]);
 
 defineOptions({
   inheritAttrs: false,
-})
+});
 
-const _loading = ref(false)
+const _loading = ref(false);
 
 const $loading = computed({
   get() {
-    return props.loading !== undefined ? props.loading : _loading.value
+    return props.loading !== undefined ? props.loading : _loading.value;
   },
   set(value) {
-    props.loading !== undefined ? emit('update:loading', value) : _loading.value = value
+    props.loading !== undefined
+      ? emit("update:loading", value)
+      : (_loading.value = value);
   },
-})
+});
 
-const isContentCollapsed = ref(props.collapsed)
-const isCardRemoved = ref(false)
+const isContentCollapsed = ref(props.collapsed);
+const isCardRemoved = ref(false);
 
 // stop loading
 const stopLoading = () => {
-  $loading.value = false
-}
+  $loading.value = false;
+};
 
 // trigger collapse
 const triggerCollapse = () => {
-  isContentCollapsed.value = !isContentCollapsed.value
-  emit('collapsed', isContentCollapsed.value)
-}
+  isContentCollapsed.value = !isContentCollapsed.value;
+  emit("collapsed", isContentCollapsed.value);
+};
 
 // trigger refresh
 const triggerRefresh = () => {
-  $loading.value = true
-  emit('refresh', stopLoading)
-}
+  $loading.value = true;
+  emit("refresh", stopLoading);
+};
 
 // trigger removal
 const triggeredRemove = () => {
-  isCardRemoved.value = true
-  emit('trash')
-}
+  isCardRemoved.value = true;
+  emit("trash");
+};
 </script>
 
 <template>
@@ -110,49 +112,53 @@ const triggeredRemove = () => {
 
               <!-- 👉 Collapse button -->
               <IconBtn
-                v-if="(!(actionRemove || actionRefresh) || actionCollapsed) && !noActions"
+                v-if="
+                  (!(actionRemove || actionRefresh) || actionCollapsed) &&
+                  !noActions
+                "
                 @click="triggerCollapse"
               >
                 <VIcon
                   size="20"
                   icon="ri-arrow-up-s-line"
-                  :style="{ transform: isContentCollapsed ? 'rotate(-180deg)' : undefined }"
-                  style="transition-duration: 0.28s;"
+                  :style="{
+                    transform: isContentCollapsed
+                      ? 'rotate(-180deg)'
+                      : undefined,
+                  }"
+                  style="transition-duration: 0.28s"
                 />
               </IconBtn>
 
               <!-- 👉 Overlay button -->
               <IconBtn
-                v-if="(!(actionRemove || actionCollapsed) || actionRefresh) && !noActions"
+                v-if="
+                  (!(actionRemove || actionCollapsed) || actionRefresh) &&
+                  !noActions
+                "
                 @click="triggerRefresh"
               >
-                <VIcon
-                  size="20"
-                  icon="ri-refresh-line"
-                />
+                <VIcon size="20" icon="ri-refresh-fill" />
               </IconBtn>
 
               <!-- 👉 Close button -->
               <IconBtn
-                v-if="(!(actionRefresh || actionCollapsed) || actionRemove) && !noActions"
+                v-if="
+                  (!(actionRefresh || actionCollapsed) || actionRemove) &&
+                  !noActions
+                "
                 @click="triggeredRemove"
               >
-                <VIcon
-                  size="20"
-                  icon="ri-close-line"
-                />
+                <VIcon size="20" icon="ri-close-line" />
               </IconBtn>
             </div>
-          <!-- !SECTION -->
+            <!-- !SECTION -->
           </template>
         </VCardItem>
 
         <!-- 👉 card content -->
         <VExpandTransition>
-          <div
-            v-show="!isContentCollapsed"
-            class="v-card-content"
-          >
+          <div v-show="!isContentCollapsed" class="v-card-content">
             <slot />
           </div>
         </VExpandTransition>
@@ -174,7 +180,7 @@ const triggeredRemove = () => {
 
 <style lang="scss">
 .v-card-item {
-  +.v-card-content {
+  + .v-card-content {
     .v-card-text:first-child {
       padding-block-start: 0;
     }

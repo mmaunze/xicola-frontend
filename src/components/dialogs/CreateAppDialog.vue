@@ -1,159 +1,158 @@
 <script setup>
-import illustrationJohn from '@images/pages/illustration-john.png'
-import angularIcon from '@images/icons/brands/angular.png'
-import laravelIcon from '@images/icons/brands/laravel.png'
-import reactIcon from '@images/icons/brands/react.png'
-import vueIcon from '@images/icons/brands/vue.png'
-import awsIcon from '@images/icons/brands/aws.png'
-import firebaseIcon from '@images/icons/brands/firebase.png'
-import mysqlIcon from '@images/icons/brands/mysql.png'
+import illustrationJohn from "@images/pages/illustration-john.png";
+import angularIcon from "@images/icons/brands/angular.png";
+import laravelIcon from "@images/icons/brands/laravel.png";
+import reactIcon from "@images/icons/brands/react.png";
+import vueIcon from "@images/icons/brands/vue.png";
+import awsIcon from "@images/icons/brands/aws.png";
+import firebaseIcon from "@images/icons/brands/firebase.png";
+import mysqlIcon from "@images/icons/brands/mysql.png";
 
 const props = defineProps({
   isDialogVisible: {
     type: Boolean,
     required: true,
   },
-})
+});
 
-const emit = defineEmits([
-  'update:isDialogVisible',
-  'updatedData',
-])
+const emit = defineEmits(["update:isDialogVisible", "updatedData"]);
 
-const currentStep = ref(0)
+const currentStep = ref(0);
 
 const createApp = [
   {
-    icon: 'ri-file-text-line',
-    title: 'DETAILS',
-    subtitle: 'Enter Details',
+    icon: "ri-file-text-line",
+    title: "DETAILS",
+    subtitle: "Enter Details",
   },
   {
-    icon: 'ri-star-smile-line',
-    title: 'FRAMEWORKS',
-    subtitle: 'Select Framework',
+    icon: "ri-star-smile-line",
+    title: "FRAMEWORKS",
+    subtitle: "Select Framework",
   },
   {
-    icon: 'ri-pie-chart-2-line',
-    title: 'DATABASE',
-    subtitle: 'Select Database',
+    icon: "ri-pie-chart-2-line",
+    title: "DATABASE",
+    subtitle: "Select Database",
   },
   {
-    icon: 'ri-bank-card-line',
-    title: 'BILLING',
-    subtitle: 'Payment Details',
+    icon: "ri-bank-card-line",
+    title: "BILLING",
+    subtitle: "Payment Details",
   },
   {
-    icon: 'ri-check-double-line',
-    title: 'SUBMIT',
-    subtitle: 'submit',
+    icon: "ri-check-double-line",
+    title: "SUBMIT",
+    subtitle: "submit",
   },
-]
+];
 
 const categories = [
   {
-    icon: 'ri-bar-chart-box-line',
-    color: 'info',
-    title: 'CRM Application',
-    subtitle: 'Scales with any business',
-    slug: 'crm-application',
+    icon: "ri-bar-chart-box-line",
+    color: "info",
+    title: "CRM Application",
+    subtitle: "Scales with any business",
+    slug: "crm-application",
   },
   {
-    icon: 'ri-shopping-cart-line',
-    color: 'success',
-    title: 'Ecommerce Platforms',
-    subtitle: 'Grow Your Business With App',
-    slug: 'ecommerce-application',
+    icon: "ri-shopping-cart-line",
+    color: "success",
+    title: "Ecommerce Platforms",
+    subtitle: "Grow Your Business With App",
+    slug: "ecommerce-application",
   },
   {
-    icon: 'ri-video-upload-line',
-    color: 'error',
-    title: 'Online Learning platform',
-    subtitle: 'Start learning today',
-    slug: 'online-learning-application',
+    icon: "ri-video-upload-line",
+    color: "error",
+    title: "Online Learning platform",
+    subtitle: "Start learning today",
+    slug: "online-learning-application",
   },
-]
+];
 
 const frameworks = [
   {
     icon: reactIcon,
-    color: 'info',
-    title: 'React Native',
-    subtitle: 'Create truly native apps',
-    slug: 'react-framework',
+    color: "info",
+    title: "React Native",
+    subtitle: "Create truly native apps",
+    slug: "react-framework",
   },
   {
     icon: angularIcon,
-    color: 'error',
-    title: 'Angular',
-    subtitle: 'Most suited for your application',
-    slug: 'angular-framework',
+    color: "error",
+    title: "Angular",
+    subtitle: "Most suited for your application",
+    slug: "angular-framework",
   },
   {
     icon: vueIcon,
-    color: 'success',
-    title: 'Vue',
-    subtitle: 'Progressive Framework',
-    slug: 'vue-framework',
+    color: "success",
+    title: "Vue",
+    subtitle: "Progressive Framework",
+    slug: "vue-framework",
   },
   {
     icon: laravelIcon,
-    color: 'warning',
-    title: 'Laravel',
-    subtitle: 'PHP web frameworks',
-    slug: 'laravel-framework',
+    color: "warning",
+    title: "Laravel",
+    subtitle: "PHP web frameworks",
+    slug: "laravel-framework",
   },
-]
+];
 
 const databases = [
   {
     icon: firebaseIcon,
-    color: 'warning',
-    title: 'Firebase',
-    subtitle: 'Cloud Firestore',
-    slug: 'firebase-database',
+    color: "warning",
+    title: "Firebase",
+    subtitle: "Cloud Firestore",
+    slug: "firebase-database",
   },
   {
     icon: awsIcon,
-    color: 'secondary',
-    title: 'AWS',
-    subtitle: 'Amazon Fast NoSQL Database',
-    slug: 'aws-database',
+    color: "secondary",
+    title: "AWS",
+    subtitle: "Amazon Fast NoSQL Database",
+    slug: "aws-database",
   },
   {
     icon: mysqlIcon,
-    color: 'info',
-    title: 'MySQL',
-    subtitle: 'Basic MySQL database',
-    slug: 'mysql-database',
+    color: "info",
+    title: "MySQL",
+    subtitle: "Basic MySQL database",
+    slug: "mysql-database",
   },
-]
+];
 
 const createAppData = ref({
-  category: 'crm-application',
-  framework: 'vue-framework',
-  database: 'firebase-database',
+  category: "crm-application",
+  framework: "vue-framework",
+  database: "firebase-database",
   cardNumber: null,
-  cardName: '',
-  cardExpiry: '',
-  cardCvv: '',
+  cardName: "",
+  cardExpiry: "",
+  cardCvv: "",
   isSave: false,
-})
+});
 
-const dialogVisibleUpdate = val => {
-  emit('update:isDialogVisible', val)
-  currentStep.value = 0
-}
+const dialogVisibleUpdate = (val) => {
+  emit("update:isDialogVisible", val);
+  currentStep.value = 0;
+};
 
-watch(() => props, () => {
-  if (!props.isDialogVisible)
-    currentStep.value = 0
-})
+watch(
+  () => props,
+  () => {
+    if (!props.isDialogVisible) currentStep.value = 0;
+  }
+);
 
 const onSubmit = () => {
-  alert('submitted...!!')
-  emit('updatedData', createAppData.value)
-}
+  alert("submitted...!!");
+  emit("updatedData", createAppData.value);
+};
 </script>
 
 <template>
@@ -172,19 +171,14 @@ const onSubmit = () => {
 
       <VCardText class="pt-5">
         <div class="text-center mb-6">
-          <h4 class="text-h4 text-center mb-2">
-            Create App
-          </h4>
+          <h4 class="text-h4 text-center mb-2">Create App</h4>
           <div class="text-body-1">
             Provide data with this form to create your app.
           </div>
         </div>
 
         <VRow>
-          <VCol
-            cols="12"
-            sm="4"
-          >
+          <VCol cols="12" sm="4">
             <AppStepper
               v-model:current-step="currentStep"
               direction="vertical"
@@ -194,24 +188,16 @@ const onSubmit = () => {
             />
           </VCol>
 
-          <VCol
-            cols="12"
-            sm="8"
-          >
+          <VCol cols="12" sm="8">
             <VWindow
               v-model="currentStep"
-              class="disable-tab-transition stepper-content"
+              class="enable-tab-transition stepper-content"
             >
               <!-- 👉 category -->
               <VWindowItem>
-                <VTextField
-                  label="Application Name"
-                  placeholder="myRider"
-                />
+                <VTextField label="Application Name" placeholder="myRider" />
 
-                <h5 class="text-h5 mb-4 mt-6">
-                  Category
-                </h5>
+                <h5 class="text-h5 mb-4 mt-6">Category</h5>
                 <VRadioGroup v-model="createAppData.category">
                   <VList class="card-list">
                     <VListItem
@@ -227,10 +213,7 @@ const onSubmit = () => {
                           :color="category.color"
                           class="me-1"
                         >
-                          <VIcon
-                            :icon="category.icon"
-                            size="30"
-                          />
+                          <VIcon :icon="category.icon" size="30" />
                         </VAvatar>
                       </template>
 
@@ -251,9 +234,7 @@ const onSubmit = () => {
 
               <!-- 👉 Frameworks -->
               <VWindowItem>
-                <h5 class="text-h5 mb-4">
-                  Select Framework
-                </h5>
+                <h5 class="text-h5 mb-4">Select Framework</h5>
                 <VRadioGroup v-model="createAppData.framework">
                   <VList class="card-list">
                     <VListItem
@@ -269,7 +250,7 @@ const onSubmit = () => {
                           :color="framework.color"
                           class="me-1"
                         >
-                          <img :src="framework.icon">
+                          <img :src="framework.icon" />
                         </VAvatar>
                       </template>
                       <VListItemTitle class="mb-1 font-weight-medium">
@@ -288,14 +269,9 @@ const onSubmit = () => {
 
               <!-- 👉 Database Engine -->
               <VWindowItem>
-                <VTextField
-                  label="Database Name"
-                  placeholder="userDB"
-                />
+                <VTextField label="Database Name" placeholder="userDB" />
 
-                <h5 class="text-h5 mt-6 mb-4">
-                  Select Database Engine
-                </h5>
+                <h5 class="text-h5 mt-6 mb-4">Select Database Engine</h5>
                 <VRadioGroup v-model="createAppData.database">
                   <VList class="card-list">
                     <VListItem
@@ -311,7 +287,7 @@ const onSubmit = () => {
                           :color="database.color"
                           class="me-1"
                         >
-                          <img :src="database.icon">
+                          <img :src="database.icon" />
                         </VAvatar>
                       </template>
                       <VListItemTitle class="mb-1 font-weight-medium">
@@ -341,10 +317,7 @@ const onSubmit = () => {
                       />
                     </VCol>
 
-                    <VCol
-                      cols="12"
-                      md="6"
-                    >
+                    <VCol cols="12" md="6">
                       <VTextField
                         v-model="createAppData.cardName"
                         label="Name on Card"
@@ -352,10 +325,7 @@ const onSubmit = () => {
                       />
                     </VCol>
 
-                    <VCol
-                      cols="6"
-                      md="3"
-                    >
+                    <VCol cols="6" md="3">
                       <VTextField
                         v-model="createAppData.cardExpiry"
                         label="Expiry"
@@ -363,10 +333,7 @@ const onSubmit = () => {
                       />
                     </VCol>
 
-                    <VCol
-                      cols="6"
-                      md="3"
-                    >
+                    <VCol cols="6" md="3">
                       <VTextField
                         v-model="createAppData.cardCvv"
                         label="CVV"
@@ -385,18 +352,12 @@ const onSubmit = () => {
               </VWindowItem>
 
               <VWindowItem class="text-center">
-                <h5 class="text-h5 mb-2 mt-3">
-                  Submit 🥳
-                </h5>
+                <h5 class="text-h5 mb-2 mt-3">Submit 🥳</h5>
                 <p class="text-body-2 mb-4">
                   Submit to kickstart your project.
                 </p>
 
-                <VImg
-                  :src="illustrationJohn"
-                  width="261"
-                  class="mx-auto"
-                />
+                <VImg :src="illustrationJohn" width="261" class="mx-auto" />
               </VWindowItem>
             </VWindow>
 
@@ -407,11 +368,7 @@ const onSubmit = () => {
                 :disabled="currentStep === 0"
                 @click="currentStep--"
               >
-                <VIcon
-                  icon="ri-arrow-left-line"
-                  start
-                  class="flip-in-rtl"
-                />
+                <VIcon icon="ri-arrow-left-line" start class="flip-in-rtl" />
                 Previous
               </VBtn>
 
@@ -424,17 +381,10 @@ const onSubmit = () => {
                 submit
               </VBtn>
 
-              <VBtn
-                v-else
-                @click="currentStep++"
-              >
+              <VBtn v-else @click="currentStep++">
                 Next
 
-                <VIcon
-                  icon="ri-arrow-right-line"
-                  end
-                  class="flip-in-rtl"
-                />
+                <VIcon icon="ri-arrow-right-line" end class="flip-in-rtl" />
               </VBtn>
             </div>
           </VCol>

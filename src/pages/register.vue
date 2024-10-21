@@ -64,7 +64,8 @@ const cadastrarUtilizador = async () => {
       },
       body: JSON.stringify(userData),
     });
-
+    
+    
    
     if (response.message === "Utilizador Registado com sucesso!") {
       snackbarMessage.value = "Cadastrado bem sucedido";

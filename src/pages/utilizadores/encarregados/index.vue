@@ -1,6 +1,6 @@
 <script setup>
 import EditarEncarregado from "@/views/utilizadores/estudantes/EditarAluno.vue";
-import CadastrarEncarregado from "@/views/utilizadores/professores/CadastrarProfessor.vue";
+import CadastrarEncarregado from "@/views/utilizadores/professores/forms/CadastrarProfessor.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -345,7 +345,7 @@ atualizarDados();
         <VBtn
           variant="outlined"
           color="secondary"
-          prepend-icon="ri-refresh-line"
+          prepend-icon="ri-refresh-fill"
           @click="atualizarDados()"
           >Recarregar Dados</VBtn
         >

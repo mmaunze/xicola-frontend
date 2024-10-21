@@ -63,8 +63,8 @@ const fetchDistritos = async () => {
 };
 
 const sexo = [
-  { title: "Masculino", value: "M" },
-  { title: "Feminino", value: "F" },
+  { title: "Masculino", value: "Masculino" },
+  { title: "Feminino", value: "Femino" },
 ];
 
 fetchDistritos();
@@ -288,7 +288,7 @@ atualizarDados();
         <VBtn
           variant="outlined"
           color="secondary"
-          prepend-icon="ri-refresh-line"
+          prepend-icon="ri-refresh-fill"
           @click="atualizarDados()"
           >Recarregar Dados</VBtn
         >

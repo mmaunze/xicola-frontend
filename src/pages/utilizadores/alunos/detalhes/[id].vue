@@ -124,7 +124,7 @@ onMounted(() => {
       <!-- Conteúdo das abas -->
       <VWindow
         v-model="userTab"
-        class="mt-6 disable-tab-transition"
+        class="mt-6 enable-tab-transition"
         :touch="false"
       >
         <VWindowItem>

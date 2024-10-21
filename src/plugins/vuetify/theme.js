@@ -114,7 +114,7 @@ export const themes = {
     },
     variables: {
       'code-color': '#3B49E6',
-      'overlay-scrim-background': '#101121',
+      'overlay-scrim-background': '#31363F',
       'tooltip-background': '#F5F5F5',
       'overlay-scrim-opacity': 0.6,
       'hover-opacity': 0.06,
@@ -131,7 +131,7 @@ export const themes = {
       'medium-emphasis-opacity': 0.7,
 
       // 👉 Shadows
-      'shadow-key-umbra-color': '#101121',
+      'shadow-key-umbra-color': '#31363F',
       'shadow-xs-opacity': '0.20',
       'shadow-sm-opacity': '0.24',
       'shadow-md-opacity': '0.26',

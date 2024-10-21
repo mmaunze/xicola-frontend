@@ -266,7 +266,7 @@ const getIconBtnProps = (item) => {
         <VBtn
           variant="outlined"
           color="secondary"
-          prepend-icon="ri-refresh-line"
+          prepend-icon="ri-refresh-fill"
           @click="atualizarDados()"
         >
           Recarregar Dados

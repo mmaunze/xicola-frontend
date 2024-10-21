@@ -16,8 +16,6 @@ const alunos = ref([]);
 const distritos = ref([]);
 const filteredAlunos = ref([]);
 
-const token = useCookie("accessToken").value;
-
 const total_alunos = ref(0);
 const total_matriculados = ref(0);
 const total_transferidos = ref(0);
@@ -118,9 +116,6 @@ const fetchDistritos = async () => {
   try {
     const res = await $api("/distritos", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     distritos.value = res.map((distrito) => ({
@@ -143,9 +138,7 @@ const fetchAlunos = async () => {
   try {
     const res = await $api("/alunos", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+     
     });
 
     alunos.value = res.map((aluno) => ({
@@ -198,9 +191,6 @@ const totalAlunos = async () => {
   try {
     const res = await $api("/alunos/totais", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     total_alunos.value = res;
@@ -209,14 +199,6 @@ const totalAlunos = async () => {
   }
 };
 
-const deleteAluno = async (id) => {
-  await $api(`/alunos/remover/${id}`, { method: "DELETE" });
-
-  const index = selectedRows.value.findIndex((row) => row === id);
-  if (index !== -1) selectedRows.value.splice(index, 1);
-
-  atualizarDados();
-};
 
 const cadastrarAluno = async (userData) => {
   await $api("/alunos/cadastrar", {
@@ -227,14 +209,6 @@ const cadastrarAluno = async (userData) => {
   fetchAlunos();
 };
 
-const editarAluno = async (userData) => {
-  await $api("/alunos/editar/{id}", {
-    method: "PUT",
-    body: userData,
-  });
-
-  fetchAlunos();
-};
 
 const totalMatriculados = async () => {
   try {
@@ -329,6 +303,7 @@ const atualizarDados = () => {
   totalSuspensos();
   totalDesistentes();
   fetchDistritos();
+  
 };
 
 atualizarDados();
@@ -412,7 +387,7 @@ atualizarDados();
         <VBtn
           variant="outlined"
           color="secondary"
-          prepend-icon="ri-refresh-line"
+          prepend-icon="ri-refresh-fill"
           @click="atualizarDados()"
           >Recarregar Dados</VBtn
         >

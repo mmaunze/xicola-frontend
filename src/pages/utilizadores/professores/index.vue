@@ -1,6 +1,5 @@
 <script setup>
-import EditarProfessor from "@/views/utilizadores/estudantes/EditarAluno.vue";
-import CadastrarProfessor from "@/views/utilizadores/professores/CadastrarProfessor.vue";
+import CadastrarProfessor from "@/views/utilizadores/professores/forms/CadastrarProfessor.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -11,11 +10,12 @@ const itemsPerPage = ref(8);
 const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
+
 const selectedRows = ref([]);
-const alunos = ref([]);
+const professores = ref([]);
 const distritos = ref([]);
 const areas_cientificas = ref([]);
-const filteredAlunos = ref([]);
+const filteredProfessores = ref([]);
 
 const total_professores = ref(0);
 const total_activos = ref(0);
@@ -25,7 +25,6 @@ const total_suspensos = ref(0);
 const total_reformados = ref(0);
 
 const isCadastrarProfessorVisible = ref(false);
-const isEditarProfessorVisible = ref(false);
 
 const mini_estatisticas = ref([
   {
@@ -85,24 +84,18 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
-const sexo = [
-  { title: "Masculino", value: "M" },
-  { title: "Feminino", value: "F" },
-];
-
 const estado = [
   { title: "Activo", value: "Activo" },
   { title: "Transferido", value: "Transferido" },
-  { title: "Graduado", value: "Graduado" },
+  { title: "Reformado", value: "Reformado" },
   { title: "Suspenso", value: "Suspenso" },
   { title: "Expulso", value: "Expulso" },
-  { title: "Desistente", value: "Desistente" },
 ];
 
-const paginatedAlunos = computed(() => {
+const paginatedProfessores = computed(() => {
   const start = (page.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return filteredAlunos.value.slice(start, end);
+  return filteredProfessores.value.slice(start, end);
 });
 
 const fetchDistritos = async () => {
@@ -117,7 +110,7 @@ const fetchDistritos = async () => {
       provincia: distrito.provincia,
     }));
 
-    filterprofessores();
+    filterProfessores();
     distritos.value = distritos.value.map((distrito) => ({
       title: distrito.nome,
       value: distrito.nome,
@@ -138,7 +131,7 @@ const fetchAreasCientificas = async () => {
       nome: area.nome,
     }));
 
-    filterprofessores();
+    filterProfessores();
     areas_cientificas.value = areas_cientificas.value.map((area) => ({
       title: area.nome,
       value: area.nome,
@@ -148,13 +141,13 @@ const fetchAreasCientificas = async () => {
   }
 };
 
-const fetchprofessores = async () => {
+const fetchProfessores = async () => {
   try {
     const res = await $api("/professores", {
       method: "GET",
     });
 
-    alunos.value = res.map((professor) => ({
+    professores.value = res.map((professor) => ({
       id: professor.id,
       nome: professor.nomeCompleto,
       dataNascimento: professor.dataNascimento,
@@ -167,14 +160,14 @@ const fetchprofessores = async () => {
       estado: professor.estado,
     }));
 
-    filterprofessores();
+    filterProfessores();
   } catch (err) {
     console.error("Erro ao buscar professores:", err);
   }
 };
 
-const filterprofessores = () => {
-  filteredAlunos.value = alunos.value.filter((professor) => {
+const filterProfessores = () => {
+  filteredProfessores.value = professores.value.filter((professor) => {
     const matchesSearch =
       professor.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       professor.distritoNascimento
@@ -208,12 +201,11 @@ const filterprofessores = () => {
   });
 };
 
-const totalprofessores = async () => {
+const totalProfessores = async () => {
   try {
     const res = await $api("/professores/totais", {
       method: "GET",
     });
-
     total_professores.value = res;
   } catch (err) {
     console.error("Erro ao buscar professores:", err);
@@ -226,7 +218,7 @@ const cadastrarProfessor = async (userData) => {
     body: userData,
   });
 
-  fetchprofessores();
+  fetchProfessores();
 };
 
 const totalActivos = async () => {
@@ -297,12 +289,12 @@ const updateOptions = (options) => {
 
 watch(
   [searchQuery, selectedDistrito, selectedAreaFormacao, selectedEstado],
-  filterprofessores
+  filterProfessores
 );
 
 const atualizarDados = () => {
-  fetchprofessores();
-  totalprofessores();
+  fetchProfessores();
+  totalProfessores();
   totaTransferidos();
   totalActivos();
   fetchAreasCientificas();
@@ -393,7 +385,7 @@ atualizarDados();
         <VBtn
           variant="outlined"
           color="secondary"
-          prepend-icon="ri-refresh-line"
+          prepend-icon="ri-refresh-fill"
           @click="atualizarDados()"
           >Recarregar Dados</VBtn
         >
@@ -416,10 +408,10 @@ atualizarDados();
     <VCard class="mb-6">
       <VDataTableServer
         v-model:model-value="selectedRows"
-        :items="paginatedAlunos"
+        :items="paginatedProfessores"
         item-value="id"
         :items-per-page="itemsPerPage"
-        :items-length="filteredAlunos.length"
+        :items-length="filteredProfessores.length"
         :headers="headers"
         show-select
         class="text-no-wrap rounded-0"
@@ -435,23 +427,11 @@ atualizarDados();
           >
             <VIcon icon="ri-eye-line" />
           </IconBtn>
-
-          <VBtn
-            icon="ri-edit-2-line"
-            :icon-color="success"
-            variant="plain"
-            @click="isEditarProfessorVisible = true"
-          />
         </template>
       </VDataTableServer>
     </VCard>
-    <!-- Cadastrar estudante modal -->
-    <CadastrarProfessor
-      v-model:isDrawerOpen="isCadastrarProfessorVisible"
-      @user-data="cadastrarProfessor"
-    />
 
-    <EditarProfessor
+    <CadastrarProfessor
       v-model:isDrawerOpen="isCadastrarProfessorVisible"
       @user-data="cadastrarProfessor"
     />

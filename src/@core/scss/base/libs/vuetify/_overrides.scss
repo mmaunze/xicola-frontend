@@ -95,7 +95,7 @@ body,
 
   This class will disable transition and adds `overflow: unset` on `VWindow` to allow spreading shadow
 */
-.disable-tab-transition {
+.enable-tab-transition {
   overflow: unset !important;
 
   .v-window__container {

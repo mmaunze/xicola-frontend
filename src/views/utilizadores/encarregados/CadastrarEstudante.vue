@@ -27,16 +27,13 @@ const religiao = ref("");
 const grupoSanguineo = ref("");
 const endereco = ref("");
 
-
-
-
 const escolaAnterior = ref("");
 const nomeDoPai = ref("");
 const nomeDaMae = ref("");
 const numeroTelefonePrincipal = ref("");
 
 // Arrays de opções conhecidas
-const opcoesSexo = ["M", "F"];
+const opcoesSexo = ["Masculino", "Femino"];
 const opcoesReligiao = [
   "Cristã",
   "Católica",
