@@ -1,16 +1,16 @@
 <script setup>
-import Actividades from "@/views/utilizadores/estudantes/detalhes/Actividades.vue";
-import Documentacao from "@/views/utilizadores/estudantes/detalhes/Documentacao.vue";
-import Frequencia from "@/views/utilizadores/estudantes/detalhes/Frequencia.vue";
-import HistoricoAcademico from "@/views/utilizadores/estudantes/detalhes/HistoricoAcademico.vue";
-import InformacaoFamilia from "@/views/utilizadores/estudantes/detalhes/InformacaoFamilia.vue";
-import Mensalidades from "@/views/utilizadores/estudantes/detalhes/Mensalidades.vue";
-import Sobre from "@/views/utilizadores/estudantes/detalhes/Sobre.vue";
+import Actividades from "@/views/utilizadores/professores/detalhes/Actividades.vue";
+import Documentacao from "@/views/utilizadores/professores/detalhes/Documentacao.vue";
+import Frequencia from "@/views/utilizadores/professores/detalhes/Frequencia.vue";
+import HistoricoAcademico from "@/views/utilizadores/professores/detalhes/HistoricoAcademico.vue";
+import InformacaoFamilia from "@/views/utilizadores/professores/detalhes/InformacaoFamilia.vue";
+import Mensalidades from "@/views/utilizadores/professores/detalhes/Mensalidades.vue";
+import Sobre from "@/views/utilizadores/professores/detalhes/Sobre.vue";
 import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-professores-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
+const route = useRoute("utilizadores-professores-detalhes-id"); 
 const userTab = ref(null);
-const userData = ref(null); // Para armazenar os dados do aluno
+const userData = ref(null); 
 
 const token = useCookie("accessToken").value;
 
@@ -61,8 +61,8 @@ const tabs = [
   },
 ];
 
-// Função para buscar os dados do aluno
-const fetchAluno = async () => {
+
+const fetchProfessor = async () => {
   try {
     const res = await $api(`/professores/professor/${route.params.id}`, {
       method: "GET",
@@ -70,8 +70,6 @@ const fetchAluno = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    // Verifique se o resultado existe antes de preencher os dados
 
     if (res) {
       userData.value = {
@@ -85,10 +83,13 @@ const fetchAluno = async () => {
         religiao: res.religiao,
         grupoSanguineo: res.grupoSanguineo,
         endereco: res.endereco,
-        dataRegisto: res.dataRegisto,
+        dataRegisto: res.dataContracto,
         escolaAnterior: res.escolaAnterior,
+        estadoCivil: res.estadoCivil,
+        areaFormacao: res.areaFormacao,
         bilheteIdentificacao: res.bilheteIdentificacao,
         numeroTelefonePrincipal: res.numeroTelefonePrincipal,
+        numerroTelefoneAlternativo: res.numerroTelefoneAlternativo,
         sexo: res.sexo,
         estado: res.estado,
       };
@@ -100,9 +101,9 @@ const fetchAluno = async () => {
   }
 };
 
-// Carregar os dados do aluno assim que o componente for montado
+
 onMounted(() => {
-  fetchAluno();
+  fetchProfessor();
 });
 </script>
 <template>
@@ -154,10 +155,10 @@ onMounted(() => {
     </VCol>
   </VRow>
 
-  <!-- Alerta se o aluno não for encontrado -->
+
   <div v-else>
     <VAlert type="error" variant="tonal">
-      Aluno com ID {{ route.params.id }} não encontrado!
+      Professor {{ route.params.id }} não encontrado!
     </VAlert>
   </div>
 </template>

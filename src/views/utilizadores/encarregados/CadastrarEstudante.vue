@@ -27,6 +27,9 @@ const religiao = ref("");
 const grupoSanguineo = ref("");
 const endereco = ref("");
 
+
+
+
 const escolaAnterior = ref("");
 const nomeDoPai = ref("");
 const nomeDaMae = ref("");

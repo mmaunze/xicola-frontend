@@ -129,7 +129,7 @@ const fetchDistritos = async () => {
 
 const fetchAreasCientificas = async () => {
   try {
-    const res = await $api("/geral/areas-cientificas", {
+    const res = await $api("/areas-cientificas", {
       method: "GET",
     });
 

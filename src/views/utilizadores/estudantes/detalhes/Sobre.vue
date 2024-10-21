@@ -1,5 +1,5 @@
 <script setup>
-import EditarEstudante from '../EditarEstudante.vue';
+import EditarEstudante from "../EditarEstudante.vue";
 
 const props = defineProps({
   userData: {
@@ -64,12 +64,10 @@ const resolveEstadoVariant = (estado) => {
             </span>
           </VAvatar>
 
-        
           <h5 class="text-h5 mt-4">
             {{ props.userData.nomeCompleto }}
           </h5>
 
-        
           <VChip
             :color="resolveEstadoVariant(props.userData.estado).color"
             size="small"
@@ -176,7 +174,7 @@ const resolveEstadoVariant = (estado) => {
 
             <VListItem>
               <VListItemTitle class="text-sm">
-                <span class="font-weight-medium">Endereço : </span>
+                <span class="font-weight-medium">Morada : </span>
                 <span class="text-body-1">{{ props.userData.endereco }}</span>
               </VListItemTitle>
             </VListItem>

@@ -19,7 +19,7 @@ const assignmentData = [
     color: "error",
   },
   {
-    title: "Basic of music theory",
+    title: "Basic of Emcarregados theory",
     tasks: 56,
     progress: 24,
     color: "info",

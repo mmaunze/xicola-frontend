@@ -1,16 +1,16 @@
 <script setup>
-import Actividades from "@/views/utilizadores/estudantes/detalhes/Actividades.vue";
-import Documentacao from "@/views/utilizadores/estudantes/detalhes/Documentacao.vue";
-import Frequencia from "@/views/utilizadores/estudantes/detalhes/Frequencia.vue";
-import HistoricoAcademico from "@/views/utilizadores/estudantes/detalhes/HistoricoAcademico.vue";
-import InformacaoFamilia from "@/views/utilizadores/estudantes/detalhes/InformacaoFamilia.vue";
-import Mensalidades from "@/views/utilizadores/estudantes/detalhes/Mensalidades.vue";
-import Sobre from "@/views/utilizadores/estudantes/detalhes/Sobre.vue";
+import Actividades from "@/views/utilizadores/encarregados/detalhes/Actividades.vue";
+import Documentacao from "@/views/utilizadores/encarregados/detalhes/Documentacao.vue";
+import Frequencia from "@/views/utilizadores/encarregados/detalhes/Frequencia.vue";
+import HistoricoAcademico from "@/views/utilizadores/encarregados/detalhes/HistoricoAcademico.vue";
+import InformacaoFamilia from "@/views/utilizadores/encarregados/detalhes/InformacaoFamilia.vue";
+import Mensalidades from "@/views/utilizadores/encarregados/detalhes/Mensalidades.vue";
+import Sobre from "@/views/utilizadores/encarregados/detalhes/Sobre.vue";
 import { onMounted, ref } from "vue";
 
-const route = useRoute("utilizadores-estudantes-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
+const route = useRoute("utilizadores-encarregados-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-estudantes-detalhes-id"
 const userTab = ref(null);
-const userData = ref(null); // Para armazenar os dados do aluno
+const userData = ref(null); 
 
 const token = useCookie("accessToken").value;
 
@@ -61,17 +61,17 @@ const tabs = [
   },
 ];
 
-// Função para buscar os dados do aluno
-const fetchAluno = async () => {
+
+const fetchEncarregado = async () => {
   try {
-    const res = await $api(`/alunos/aluno/${route.params.id}`, {
+    const res = await $api(`/encarregados-educacao/encarregado/${route.params.id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    // Verifique se o resultado existe antes de preencher os dados
+   
 
     if (res) {
       userData.value = {
@@ -86,33 +86,34 @@ const fetchAluno = async () => {
         grupoSanguineo: res.grupoSanguineo,
         endereco: res.endereco,
         dataRegisto: res.dataRegisto,
-        escolaAnterior: res.escolaAnterior,
+        localTrabalho: res.localTrabalho, 
+        sectorTrabalho: res.sectorTrabalho,
         bilheteIdentificacao: res.bilheteIdentificacao,
         numeroTelefonePrincipal: res.numeroTelefonePrincipal,
         sexo: res.sexo,
         estado: res.estado,
       };
     } else {
-      console.error("Nenhum dado de aluno encontrado.");
+      console.error("Nenhum dado de encarregado encontrado.");
     }
   } catch (err) {
-    console.error("Erro ao buscar aluno:", err);
+    console.error("Erro ao buscar encarregado:", err);
   }
 };
 
-// Carregar os dados do aluno assim que o componente for montado
+
 onMounted(() => {
-  fetchAluno();
+  fetchEncarregado();
 });
 </script>
 <template>
   <VRow v-if="userData">
-    <!-- Painel de informações do aluno -->
+   
     <VCol cols="12" md="5" lg="4">
       <Sobre :user-data="userData" />
     </VCol>
 
-    <!-- Tabs com informações adicionais -->
+   
     <VCol cols="12" md="7" lg="8">
       <VTabs v-model="userTab" class="v-tabs-pill">
         <VTab v-for="tab in tabs" :key="tab.icon">
@@ -121,7 +122,7 @@ onMounted(() => {
         </VTab>
       </VTabs>
 
-      <!-- Conteúdo das abas -->
+    
       <VWindow
         v-model="userTab"
         class="mt-6 disable-tab-transition"
@@ -154,10 +155,10 @@ onMounted(() => {
     </VCol>
   </VRow>
 
-  <!-- Alerta se o aluno não for encontrado -->
+  
   <div v-else>
     <VAlert type="error" variant="tonal">
-      Aluno com ID {{ route.params.id }} não encontrado!
+      Encarregado {{ route.params.id }} não encontrado!
     </VAlert>
   </div>
 </template>

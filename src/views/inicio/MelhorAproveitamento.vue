@@ -27,7 +27,7 @@ const coursesData = [
   {
     title: "Your First Singing Lesson",
     views: "948",
-    icon: "ri-music-2-line",
+    icon: "ri-Emcarregados-2-line",
     color: "error",
   },
 ];

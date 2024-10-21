@@ -1,7 +1,55 @@
 <script setup>
 const borderColor = 'rgba(var(--v-border-color), var(--v-border-opacity))'
 
-// Topics Charts config
+const total_alunos = ref(0);
+const total_utilizadores = ref(0);
+const total_professores = ref(0);
+const total_funcionarios = ref(0);
+
+const totalUtilizadores = async () => {
+  try {
+    const res = await $api("/utilizadores/totais", {
+      method: "GET",
+    });
+
+    total_utilizadores.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar utilizadores:", err);
+  }
+};
+
+const totalAlunos = async () => {
+  try {
+    const res = await $api("/alunos/totais", {
+      method: "GET",
+    });
+
+    total_alunos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar alunos:", err);
+  }
+};
+
+const totalprofessores = async () => {
+  try {
+    const res = await $api("/professores/totais", {
+      method: "GET",
+    });
+
+    total_professores.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar professores:", err);
+  }
+};
+
+const atualizarDados = () => {
+  totalUtilizadores();
+  totalprofessores();
+  totalAlunos();
+};
+
+atualizarDados();
+
 const topicsChartConfig = {
   chart: {
     height: 270,
@@ -49,10 +97,10 @@ const topicsChartConfig = {
     },
   },
   labels: [
-    'UI Design',
-    'UX Design',
-    'Music',
-    'Animation',
+    'Usuarios',
+    'Professores',
+    'Alunos',
+    'Encarregados',
     'Vue',
     'SEO',
   ],
@@ -78,7 +126,7 @@ const topicsChartConfig = {
     },
   },
   yaxis: {
-    max: 35,
+    max:  70,
     labels: {
       style: {
         colors: 'rgba(var(--v-theme-on-background), var(--v-disabled-opacity))',
@@ -96,9 +144,9 @@ const topicsChartConfig = {
 
 const topicsChartSeries = [{
   data: [
-    35,
-    20,
-    14,
+    total_utilizadores.value,
+    total_professores.value, 
+    total_alunos.value ,
     12,
     10,
     9,
@@ -106,21 +154,22 @@ const topicsChartSeries = [{
 }]
 
 const topicsData = [
+{
+    title: 'Usuarios',
+    value: total_utilizadores,
+    color: 'success',
+  },
   {
-    title: 'UI Design',
-    value: 35,
+    title: 'Professores',
+    value: total_professores,
     color: 'primary',
   },
   {
-    title: 'UX Design',
-    value: 20,
+    title: 'Alunos',
+    value: total_alunos,
     color: 'info',
   },
-  {
-    title: 'Music',
-    value: 14,
-    color: 'success',
-  },
+  
 ]
 
 const moreTopics = [
@@ -201,7 +250,7 @@ const moreList = [
                   {{ topic.title }}
                 </div>
                 <h5 class="text-h5">
-                  {{ topic.value }}%
+                  {{ topic.value }}
                 </h5>
               </div>
             </div>
@@ -227,7 +276,7 @@ const moreList = [
                   {{ topic.title }}
                 </div>
                 <h5 class="text-h5">
-                  {{ topic.value }}%
+                  {{ topic.value }}
                 </h5>
               </div>
             </div>

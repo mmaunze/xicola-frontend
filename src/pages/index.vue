@@ -1,9 +1,9 @@
 <script setup>
-import AcademyAssignmentProgress from "@/views/inicio/ProgressoProvas.vue";
-import AcademyCardInterestedTopics from "@/views/inicio/Pessoal.vue";
+import ProgressoProvas from "@/views/inicio/ProgressoProvas.vue";
+import Pessoal from "@/views/inicio/Pessoal.vue";
 import AcademyUpcomingWebinar from "@/views/inicio/AcademyUpcomingWebinar.vue";
-import AcademyCardTopCourses from "@/views/inicio/MelhorAproveitamento.vue";
-import AcademyCardPopularInstructors from "@/views/inicio/MelhoresAlunos.vue";
+import MelhorAproveitamento from "@/views/inicio/MelhorAproveitamento.vue";
+import MelhoresAlunos from "@/views/inicio/MelhoresAlunos.vue";
 import customCheck from "@images/svg/check.svg";
 import customLaptop from "@images/svg/laptop.svg";
 import customLightbulb from "@images/svg/lightbulb.svg";
@@ -80,7 +80,7 @@ const timeSpendingChartConfig = {
   },
 };
 
-const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23];
+const aulasDadas = [23, 35, 10, 20, 35, 23];
 </script>
 
 <template>
@@ -100,10 +100,10 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23];
 
           <div
             class="text-wrap text-body-1 mb-4"
-            style="max-inline-size: 400px"
+            style="max-inline-size: 400px;"
           >
-            Your progress this week is Awesome. let's keep it up and get a lot
-            of points reward!
+          A equipe está de parabéns! O trabalho conjunto está a gerar resultados extraordinários. 
+          Continue assim e celebremos juntos as conquistas!
           </div>
 
           <div
@@ -161,7 +161,7 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23];
         <div class="d-flex justify-space-between align-center">
           <div class="d-flex flex-column ps-3">
             <h5 class="text-h5 mb-1 text-no-wrap">Progresso do Semestre</h5>
-            <div class="mb-6 text-body-1">Weekly Report</div>
+            <div class="mb-6 text-body-1">Relatório Trimestral</div>
             <h4 class="text-h4 mb-2">
               231<span class="text-medium-emphasis">h</span> 14<span
                 class="text-medium-emphasis"
@@ -178,7 +178,7 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23];
               height="150"
               width="150"
               :options="timeSpendingChartConfig"
-              :series="timeSpendingChartSeries"
+              :series="aulasDadas"
             />
           </div>
         </div>
@@ -187,34 +187,31 @@ const timeSpendingChartSeries = [23, 35, 10, 20, 35, 23];
 
     <VRow class="match-height">
       <VCol cols="12" md="8">
-        <!-- 👉 Topic You are Interested in -->
-        <AcademyCardInterestedTopics />
+      
+        <Pessoal />
       </VCol>
 
-      <!-- 👉 Popular Instructors  -->
+    
       <VCol cols="12" md="4" sm="6">
-        <AcademyCardPopularInstructors />
+        <MelhoresAlunos />
       </VCol>
 
-      <!-- 👉 Academy Melhor AProveitamento  -->
+    
       <VCol cols="12" md="4" sm="6">
-        <AcademyCardTopCourses />
+        <MelhorAproveitamento />
       </VCol>
 
-      <!-- 👉 Academy Upcoming Webinar -->
+     
       <VCol cols="12" md="4" sm="6">
         <AcademyUpcomingWebinar />
       </VCol>
 
-      <!-- 👉 Academy Progresso das Provas  -->
+    
       <VCol cols="12" md="4" sm="6">
-        <AcademyAssignmentProgress />
+        <ProgressoProvas />
       </VCol>
 
-      <!-- 👉 Academy Course Table  -->
-      <VCol>
-        <AcademyCourseTable />
-      </VCol>
+    
     </VRow>
   </div>
 </template>

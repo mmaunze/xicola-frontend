@@ -51,7 +51,7 @@ const moreList = [
             },
             {
               name: 'Benedetto Rossiter',
-              profession: 'UI/UX Design',
+              profession: 'UI/Alunos',
               totalCourses: 12,
               avatar: avatar3,
             },

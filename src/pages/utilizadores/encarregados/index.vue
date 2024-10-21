@@ -1,9 +1,10 @@
 <script setup>
-import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarEstudante.vue";
+import CadastrarEncarregado from "@/views/utilizadores/professores/CadastrarProfessor.vue";
+import EditarEncarregado from "@/views/utilizadores/estudantes/EditarEstudante.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
-const selectedSexo = ref(null);
+const selectedASectorTrabalho = ref(null);
 const selectedEstado = ref(null);
 
 const itemsPerPage = ref(5);
@@ -13,23 +14,53 @@ const orderBy = ref();
 const selectedRows = ref([]);
 const alunos = ref([]);
 const distritos = ref([]);
-const filteredAlunos = ref([]);
-const total_alunos = ref(0);
-const total_matriculados = ref(0);
+const sectores_trabalho = ref([]);
+const filteredEncarregados = ref([]);
+const total_encarregados = ref(0);
+const total_activos = ref(0);
 const total_transferidos = ref(0);
-const token = useCookie("accessToken").value;
+const total_reformados = ref(0);
 
-const updateOptions = (options) => {
-  page.value = options.page;
-  sortBy.value = options.sortBy[0]?.key;
-  orderBy.value = options.sortBy[0]?.order;
-};
+const isCadastrarEncarregadoVisible = ref(false);
+const isEditarEncarregadoVisible = ref(false);
+
+const mini_estatisticas = ref([
+  {
+    title: "Todos encarregados",
+    value: total_encarregados,
+    desc: "encarregados cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+  {
+    title: "Activos",
+    value: total_activos,
+    desc: "encarregados Activos",
+    icon: "ri-user-follow-line",
+    iconColor: "success",
+  },
+  {
+    title: "Transferidos",
+    value: total_transferidos,
+    desc: "encarregados transferidos",
+    icon: "ri-user-search-line",
+    iconColor: "warning",
+  },
+  {
+    title: "Reformados",
+    value: total_reformados,
+    desc: "encarregados cadastrados",
+    icon: "ri-group-line",
+    iconColor: "primary",
+  },
+]);
 
 const headers = [
-  { title: "Aluno", key: "id", sortable: true },
+  { title: "Encarregado", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
+  { title: "Sector de Trabalho", key: "sectorTrabalho", sortable: true },
   { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
   { title: "Nº Telefone", key: "numeroTelefonePrincipal", sortable: true },
@@ -37,13 +68,23 @@ const headers = [
   { title: "Ações", key: "actions", sortable: false },
 ];
 
+const estado = [
+  { title: "Activo", value: "Activo" },
+  { title: "Transferido", value: "Transferido" },
+  { title: "Graduado", value: "Graduado" },
+  { title: "Desistente", value: "Desistente" },
+];
+
+const paginatedEncarregados = computed(() => {
+  const start = (page.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredEncarregados.value.slice(start, end);
+});
+
 const fetchDistritos = async () => {
   try {
     const res = await $api("/distritos", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // Passar o token corretamente
-      },
     });
 
     distritos.value = res.map((distrito) => ({
@@ -52,159 +93,175 @@ const fetchDistritos = async () => {
       provincia: distrito.provincia,
     }));
 
-    filterAlunos();
+    filterEncarregados();
     distritos.value = distritos.value.map((distrito) => ({
       title: distrito.nome,
       value: distrito.nome,
     }));
   } catch (err) {
-    console.error("Erro ao buscar utilizadores:", err);
+    console.error("Erro ao buscar encarregados:", err);
   }
 };
 
-const sexo = [
-  { title: "Masculino", value: "M" },
-  { title: "Feminino", value: "F" },
-];
-
-fetchDistritos();
-
-const estado = [
-  { title: "Matriculado", value: "Matriculado" },
-  { title: "Transferido", value: "Transferido" },
-  { title: "Graduado", value: "Graduado" },
-  { title: "Suspenso", value: "Suspenso" },
-  { title: "Expulso", value: "Expulso" },
-  { title: "Desistente", value: "Desistente" },
-];
-
-const fetchAlunos = async () => {
+const fetchSectorTrabalho = async () => {
   try {
-    const res = await $api("/alunos", {
+    const res = await $api("/sectores_trabalho", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
-    alunos.value = res.map((aluno) => ({
-      id: aluno.id,
-      nome: aluno.nomeCompleto,
-      dataNascimento: aluno.dataNascimento,
-      distritoNascimento: aluno.distritoNascimento,
-      bilheteIdentificacao: aluno.bilheteIdentificacao,
-      numeroTelefonePrincipal: aluno.numeroTelefonePrincipal,
-      sexo: aluno.sexo,
-      estado: aluno.estado,
+    sectores_trabalho.value = res.map((area) => ({
+      id: area.id,
+      nome: area.nome,
     }));
 
-    filterAlunos();
+    filterEncarregados();
+    sectores_trabalho.value = sectores_trabalho.value.map((area) => ({
+      title: area.nome,
+      value: area.nome,
+    }));
   } catch (err) {
-    console.error("Erro ao buscar alunos:", err);
+    console.error("Erro ao buscar encarregados:", err);
   }
 };
 
-const filterAlunos = () => {
-  filteredAlunos.value = alunos.value.filter((aluno) => {
+const fetchEncarregados = async () => {
+  try {
+    const res = await $api("/encarregados-educacao", {
+      method: "GET",
+    });
+
+    alunos.value = res.map((encarregado) => ({
+      id: encarregado.id,
+      nome: encarregado.nomeCompleto,
+      dataNascimento: encarregado.dataNascimento,
+      distritoNascimento: encarregado.distritoNascimento,
+      provinciaNascimento: encarregado.provinciaNascimento,
+      bilheteIdentificacao: encarregado.bilheteIdentificacao,
+      sectorTrabalho: encarregado.sectorTrabalho,
+      numeroTelefonePrincipal: encarregado.numeroTelefonePrincipal,
+      sexo: encarregado.sexo,
+      estado: encarregado.estado,
+    }));
+
+    filterEncarregados();
+  } catch (err) {
+    console.error("Erro ao buscar encarregados:", err);
+  }
+};
+
+const filterEncarregados = () => {
+  filteredEncarregados.value = alunos.value.filter((encarregado) => {
     const matchesSearch =
-      aluno.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.distritoNascimento
+      encarregado.nome.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      encarregado.distritoNascimento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
-      aluno.bilheteIdentificacao
+      encarregado.bilheteIdentificacao
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
-      aluno.dataNascimento
+      encarregado.dataNascimento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
-      aluno.estado.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      aluno.sexo.toLowerCase().includes(searchQuery.value.toLowerCase());
+      encarregado.estado
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
+      encarregado.sectorTrabalho
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase());
 
     const matchesDistrito =
       !selectedDistrito.value ||
-      aluno.distritoNascimento === selectedDistrito.value;
+      encarregado.distritoNascimento === selectedDistrito.value;
     const matchesEstado =
-      !selectedEstado.value || aluno.estado === selectedEstado.value;
-    const matchesSexo =
-      !selectedSexo.value || aluno.sexo === selectedSexo.value;
+      !selectedEstado.value || encarregado.estado === selectedEstado.value;
+    const matcheSectotTrabalho =
+      !selectedASectorTrabalho.value ||
+      encarregado.sectorTrabalho === selectedASectorTrabalho.value;
 
-    return matchesSearch && matchesDistrito && matchesEstado && matchesSexo;
+    return (
+      matchesSearch && matchesDistrito && matchesEstado && matcheSectotTrabalho
+    );
   });
 };
 
-const paginatedAlunos = computed(() => {
-  const start = (page.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredAlunos.value.slice(start, end);
-});
-
-watch(
-  [searchQuery, selectedDistrito, selectedSexo, selectedEstado],
-  filterAlunos
-);
-
-const totalAlunos = async () => {
+const totalEncarregados = async () => {
   try {
-    const res = await $api("/alunos/totais", {
+    const res = await $api("/encarregados-educacao/totais", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
-    total_alunos.value = res;
+    total_encarregados.value = res;
   } catch (err) {
-    console.error("Erro ao buscar alunos:", err);
+    console.error("Erro ao buscar encarregados:", err);
   }
 };
 
-const atualizarDados = () => {
-  fetchAlunos();
-  totalAlunos();
-};
-
-const deleteAluno = async (id) => {
-  await $api(`/alunos/remover/${id}`, { method: "DELETE" });
-
-  const index = selectedRows.value.findIndex((row) => row === id);
-  if (index !== -1) selectedRows.value.splice(index, 1);
-
-  fetchAlunos();
-};
-
-const mini_estatisticas = ref([
-  {
-    title: "Todos Alunos",
-    value: total_alunos,
-    desc: "Alunos cadastrados",
-    icon: "ri-group-line",
-    iconColor: "primary",
-  },
-  {
-    title: "Matriculados",
-    value: total_matriculados,
-    desc: "Alunos matriculados",
-    icon: "ri-user-follow-line",
-    iconColor: "success",
-  },
-  {
-    title: "Transferidos",
-    value: total_transferidos,
-    desc: "Alunos transferidos",
-    icon: "ri-user-search-line",
-    iconColor: "warning",
-  },
-]);
-
-const isCadastrarAlunoVisible = ref(false);
-
-const cadastrarAluno = async (userData) => {
-  await $api("/autenticacao/cadastro", {
+const cadastrarEncarregado = async (userData) => {
+  await $api("/encarregados-educacao/cadastrar", {
     method: "POST",
     body: userData,
   });
 
-  fetchAlunos();
+  fetchEncarregados();
+};
+
+const totalActivos = async () => {
+  try {
+    const res = await $api("/encarregados-educacao/estado/Activo", {
+      method: "GET",
+    });
+
+    total_activos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar encarregados:", err);
+  }
+};
+
+const totaTransferidos = async () => {
+  try {
+    const res = await $api("/encarregados-educacao/estado/Transferido", {
+      method: "GET",
+    });
+
+    total_transferidos.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar encarregados:", err);
+  }
+};
+
+const totalReformados = async () => {
+  try {
+    const res = await $api("/encarregados-educacao/estado/Reformado", {
+      method: "GET",
+    });
+
+    total_reformados.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar encarregados:", err);
+  }
+};
+
+
+
+const updateOptions = (options) => {
+  page.value = options.page;
+  sortBy.value = options.sortBy[0]?.key;
+  orderBy.value = options.sortBy[0]?.order;
+};
+
+watch(
+  [searchQuery, selectedDistrito, selectedASectorTrabalho, selectedEstado],
+  filterEncarregados
+);
+
+const atualizarDados = () => {
+  fetchEncarregados();
+  totalEncarregados();
+  totaTransferidos();
+  totalActivos();
+  fetchSectorTrabalho();
+  totalReformados();
+  fetchDistritos();
 };
 
 atualizarDados();
@@ -215,7 +272,7 @@ atualizarDados();
     <div class="d-flex mb-6">
       <VRow>
         <template v-for="data in mini_estatisticas" :key="id">
-          <VCol cols="12" md="4" sm="6">
+          <VCol cols="12" md="3" sm="6">
             <VCard>
               <VCardText>
                 <div class="d-flex justify-space-between">
@@ -246,7 +303,7 @@ atualizarDados();
 
     <VCard class="mb-6">
       <VCardItem class="pb-4">
-        <VCardTitle>Filtrar Alunos</VCardTitle>
+        <VCardTitle>Filtrar Encarregados</VCardTitle>
       </VCardItem>
       <VCardText>
         <VRow>
@@ -254,18 +311,18 @@ atualizarDados();
             <VAutocomplete
               v-model="selectedDistrito"
               label="Seleccionar o distrito de nascenca"
-              placeholder="Seleccionar tipo de Utilizador"
+              placeholder="Seleccionar o distrito de nascenca"
               :items="distritos"
               clearable
               clear-icon="ri-close-line"
             />
           </VCol>
           <VCol cols="12" sm="4">
-            <VSelect
-              v-model="selectedSexo"
-              label="Selecionar Sexo"
-              placeholder="Escolher Sexo"
-              :items="sexo"
+            <VAutocomplete
+              v-model="selectedASectorTrabalho"
+              label="Seleccionar sector trabalho"
+              placeholder="Seleccionar sector de trabalho"
+              :items="sectores_trabalho"
               clearable
               clear-icon="ri-close-line"
             />
@@ -297,22 +354,24 @@ atualizarDados();
           <div class="app-user-search-filter">
             <VTextField
               v-model="searchQuery"
-              placeholder="Buscar aluno"
+              placeholder="Buscar encarregado"
               density="compact"
             />
           </div>
 
-          <VBtn @click="isCadastrarAlunoVisible = true">Cadastrar Aluno</VBtn>
+          <VBtn @click="isCadastrarEncarregadoVisible = true"
+            >Cadastrar Encarregado</VBtn
+          >
         </div>
       </VCardText>
     </VCard>
     <VCard class="mb-6">
       <VDataTableServer
         v-model:model-value="selectedRows"
-        :items="paginatedAlunos"
+        :items="paginatedEncarregados"
         item-value="id"
         :items-per-page="itemsPerPage"
-        :items-length="filteredAlunos.length"
+        :items-length="filteredEncarregados.length"
         :headers="headers"
         show-select
         class="text-no-wrap rounded-0"
@@ -322,7 +381,7 @@ atualizarDados();
           <IconBtn
             size="small"
             :to="{
-              name: 'utilizadores-estudantes-detalhes-id',
+              name: 'utilizadores-encarregados-detalhes-id',
               params: { id: item.id },
             }"
           >
@@ -333,15 +392,20 @@ atualizarDados();
             icon="ri-edit-2-line"
             :icon-color="success"
             variant="plain"
-            @click="isCadastrarAlunoVisible = true"
+            @click="isEditarEncarregadoVisible = true"
           />
         </template>
       </VDataTableServer>
     </VCard>
-    <!-- Cadastrar estudante modal -->
-    <CadastrarEstudante
-      v-model:isDrawerOpen="isCadastrarAlunoVisible"
-      @user-data="cadastrarAluno"
+   
+    <CadastrarEncarregado
+      v-model:isDrawerOpen="isCadastrarEncarregadoVisible"
+      @user-data="cadastrarEncarregado"
+    />
+
+    <EditarEncarregado
+      v-model:isDrawerOpen="isCadastrarEncarregadoVisible"
+      @user-data="cadastrarEncarregado"
     />
   </section>
 </template>

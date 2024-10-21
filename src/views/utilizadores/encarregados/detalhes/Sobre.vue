@@ -62,12 +62,10 @@ const resolveEstadoVariant = (estado) => {
             </span>
           </VAvatar>
 
-        
           <h5 class="text-h5 mt-4">
             {{ props.userData.nomeCompleto }}
           </h5>
 
-        
           <VChip
             :color="resolveEstadoVariant(props.userData.estado).color"
             size="small"
@@ -78,7 +76,7 @@ const resolveEstadoVariant = (estado) => {
         </VCardText>
 
         <VCardText class="pb-6">
-          <h5 class="text-h6">Detalhes do aluno</h5>
+          <h5 class="text-h6">Detalhes do Encarregado</h5>
 
           <VDivider class="my-4" />
 
@@ -135,6 +133,24 @@ const resolveEstadoVariant = (estado) => {
 
             <VListItem>
               <VListItemTitle class="text-sm">
+                <span class="font-weight-medium">Sector de Trabalho : </span>
+                <span class="text-body-1">{{
+                  props.userData.sectorTrabalho
+                }}</span>
+              </VListItemTitle>
+            </VListItem>
+
+            <VListItem>
+              <VListItemTitle class="text-sm">
+                <span class="font-weight-medium">Local de Trabalho : </span>
+                <span class="text-body-1">{{
+                  props.userData.localTrabalho
+                }}</span>
+              </VListItemTitle>
+            </VListItem>
+
+            <VListItem>
+              <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Telefone : </span>
                 <span class="text-body-1">{{
                   props.userData.numeroTelefonePrincipal
@@ -174,17 +190,8 @@ const resolveEstadoVariant = (estado) => {
 
             <VListItem>
               <VListItemTitle class="text-sm">
-                <span class="font-weight-medium">Endereço : </span>
+                <span class="font-weight-medium">Morada : </span>
                 <span class="text-body-1">{{ props.userData.endereco }}</span>
-              </VListItemTitle>
-            </VListItem>
-
-            <VListItem>
-              <VListItemTitle class="text-sm">
-                <span class="font-weight-medium">Escola Anterior : </span>
-                <span class="text-body-1">{{
-                  props.userData.escolaAnterior
-                }}</span>
               </VListItemTitle>
             </VListItem>
 

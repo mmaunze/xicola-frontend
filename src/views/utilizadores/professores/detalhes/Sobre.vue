@@ -45,11 +45,9 @@ const resolveEstadoVariant = (estado) => {
 
 <template>
   <VRow>
-    <!-- SECTION User Details -->
     <VCol cols="12">
       <VCard v-if="props.userData">
         <VCardText class="text-center pt-12 pb-6">
-          <!-- 👉 Avatar -->
           <VAvatar
             rounded="lg"
             :size="120"
@@ -62,12 +60,10 @@ const resolveEstadoVariant = (estado) => {
             </span>
           </VAvatar>
 
-        
           <h5 class="text-h5 mt-4">
             {{ props.userData.nomeCompleto }}
           </h5>
 
-        
           <VChip
             :color="resolveEstadoVariant(props.userData.estado).color"
             size="small"
@@ -78,11 +74,10 @@ const resolveEstadoVariant = (estado) => {
         </VCardText>
 
         <VCardText class="pb-6">
-          <h5 class="text-h6">Detalhes do aluno</h5>
+          <h5 class="text-h6">Detalhes do Professor</h5>
 
           <VDivider class="my-4" />
 
-          <!-- 👉 User Details list -->
           <VList class="card-list">
             <VListItem>
               <VListItemTitle class="text-sm">
@@ -117,9 +112,27 @@ const resolveEstadoVariant = (estado) => {
 
             <VListItem>
               <VListItemTitle class="text-sm">
-                <span class="font-weight-medium">Data de Registo : </span>
+                <span class="font-weight-medium">Estado Civil : </span>
                 <span class="text-body-1">{{
-                  props.userData.dataRegisto
+                  props.userData.estadoCivil
+                }}</span>
+              </VListItemTitle>
+            </VListItem>
+
+            <VListItem>
+              <VListItemTitle class="text-sm">
+                <span class="font-weight-medium">Area de Formacacao : </span>
+                <span class="text-body-1">{{
+                  props.userData.areaFormacao
+                }}</span>
+              </VListItemTitle>
+            </VListItem>
+
+            <VListItem>
+              <VListItemTitle class="text-sm">
+                <span class="font-weight-medium">Data de Contracto : </span>
+                <span class="text-body-1">{{
+                  props.userData.dataContrado
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -174,7 +187,7 @@ const resolveEstadoVariant = (estado) => {
 
             <VListItem>
               <VListItemTitle class="text-sm">
-                <span class="font-weight-medium">Endereço : </span>
+                <span class="font-weight-medium">Morada : </span>
                 <span class="text-body-1">{{ props.userData.endereco }}</span>
               </VListItemTitle>
             </VListItem>
@@ -197,7 +210,6 @@ const resolveEstadoVariant = (estado) => {
           </VList>
         </VCardText>
 
-        <!-- 👉 Edit and Suspend button -->
         <VCardText class="d-flex justify-center">
           <VBtn
             variant="elevated"

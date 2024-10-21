@@ -154,7 +154,7 @@ const handleDrawerModelValueUpdate = (val) => {
 
 const buscarAreas = async () => {
   try {
-    const res = await $api("/geral/areas-cientificas", {
+    const res = await $api("/areas-cientificas", {
       method: "GET",
     });
 
