@@ -30,6 +30,8 @@ declare module 'vue-router/auto-routes' {
     'utilizadores-detalhes-id': RouteRecordInfo<'utilizadores-detalhes-id', '/utilizadores/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-encarregados': RouteRecordInfo<'utilizadores-encarregados', '/utilizadores/encarregados', Record<never, never>, Record<never, never>>,
     'utilizadores-encarregados-detalhes-id': RouteRecordInfo<'utilizadores-encarregados-detalhes-id', '/utilizadores/encarregados/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    'utilizadores-funcionarios': RouteRecordInfo<'utilizadores-funcionarios', '/utilizadores/funcionarios', Record<never, never>, Record<never, never>>,
+    'utilizadores-funcionarios-detalhes-id': RouteRecordInfo<'utilizadores-funcionarios-detalhes-id', '/utilizadores/funcionarios/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     'utilizadores-professores': RouteRecordInfo<'utilizadores-professores', '/utilizadores/professores', Record<never, never>, Record<never, never>>,
     'utilizadores-professores-detalhes-id': RouteRecordInfo<'utilizadores-professores-detalhes-id', '/utilizadores/professores/detalhes/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }

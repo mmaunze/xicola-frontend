@@ -32,8 +32,8 @@ export default [
       },
 
       {
-        title: "Outros Funcionarios",
-        to: { name: "utilizadores" },
+        title: "Funcionarios",
+        to: { name: "utilizadores-funcionarios" },
         icon: { icon: "ri-account-circle-line" },
       },
     ],
