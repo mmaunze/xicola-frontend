@@ -1,6 +1,6 @@
 <script setup>
-import CadastrarEstudante from "@/views/utilizadores/estudantes/CadastrarAluno.vue";
-import EditarEstudante from "@/views/utilizadores/estudantes/EditarAluno.vue";
+import CadastrarEstudante from "@/views/utilizadores/estudantes/forms/CadastrarAluno.vue";
+import EditarEstudante from "@/views/utilizadores/estudantes/forms/EditarAluno.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -80,12 +80,10 @@ const mini_estatisticas = ref([
 ]);
 
 const headers = [
-  { title: "Aluno", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
   { title: "Provincia", key: "provinciaNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
-  { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
   { title: "Nº Telefone", key: "numeroTelefonePrincipal", sortable: true },
   { title: "Estado", key: "estado", sortable: true },
@@ -138,7 +136,6 @@ const fetchAlunos = async () => {
   try {
     const res = await $api("/alunos", {
       method: "GET",
-     
     });
 
     alunos.value = res.map((aluno) => ({
@@ -199,7 +196,6 @@ const totalAlunos = async () => {
   }
 };
 
-
 const cadastrarAluno = async (userData) => {
   await $api("/alunos/cadastrar", {
     method: "POST",
@@ -208,7 +204,6 @@ const cadastrarAluno = async (userData) => {
 
   fetchAlunos();
 };
-
 
 const totalMatriculados = async () => {
   try {
@@ -303,7 +298,6 @@ const atualizarDados = () => {
   totalSuspensos();
   totalDesistentes();
   fetchDistritos();
-  
 };
 
 atualizarDados();
@@ -352,7 +346,7 @@ atualizarDados();
           <VCol cols="12" sm="4">
             <VAutocomplete
               v-model="selectedDistrito"
-              label="Seleccionar o distrito de nascenca"
+              label="Seleccionar o distrito de nascimento"
               placeholder="Seleccionar tipo de Utilizador"
               :items="distritos"
               clearable

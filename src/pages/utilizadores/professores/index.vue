@@ -72,7 +72,6 @@ const mini_estatisticas = ref([
 ]);
 
 const headers = [
-  { title: "Professor", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
@@ -350,8 +349,8 @@ atualizarDados();
           <VCol cols="12" sm="4">
             <VAutocomplete
               v-model="selectedDistrito"
-              label="Seleccionar o distrito de nascenca"
-              placeholder="Seleccionar o distrito de nascenca"
+              label="Seleccionar o distrito de nascimento"
+              placeholder="Seleccionar o distrito de nascimento"
               :items="distritos"
               clearable
               clear-icon="ri-close-line"

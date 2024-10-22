@@ -1,10 +1,4 @@
 <script setup>
-import Actividades from "@/views/utilizadores/professores/detalhes/Actividades.vue";
-import Documentacao from "@/views/utilizadores/professores/detalhes/Documentacao.vue";
-import Turmas from "@/views/utilizadores/professores/detalhes/Turmas.vue";
-import Disciplinas from "@/views/utilizadores/professores/detalhes/Disciplinas.vue";
-import Pautas from "@/views/utilizadores/professores/detalhes/Pautas.vue";
-import Aulas from "@/views/utilizadores/professores/detalhes/Aulas.vue";
 import Sobre from "@/views/utilizadores/professores/detalhes/Sobre.vue";
 
 const route = useRoute("utilizadores-professores-detalhes-id"); 

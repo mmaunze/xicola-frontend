@@ -1,12 +1,6 @@
 <script setup>
-import Actividades from "@/views/utilizadores/encarregados/detalhes/Actividades.vue";
-import Documentacao from "@/views/utilizadores/encarregados/detalhes/Documentacao.vue";
-import Frequencia from "@/views/utilizadores/encarregados/detalhes/Frequencia.vue";
-import HistoricoAcademico from "@/views/utilizadores/encarregados/detalhes/HistoricoAcademico.vue";
-import InformacaoFamilia from "@/views/utilizadores/encarregados/detalhes/InformacaoFamilia.vue";
-import Mensalidades from "@/views/utilizadores/encarregados/detalhes/Mensalidades.vue";
 import Sobre from "@/views/utilizadores/encarregados/detalhes/Sobre.vue";
-import { onMounted, ref } from "vue";
+
 
 const route = useRoute("utilizadores-encarregados-detalhes-id"); // Assumindo que o nome da rota é "utilizadores-alunos-detalhes-id"
 const userTab = ref(null);

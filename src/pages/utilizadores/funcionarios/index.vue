@@ -56,11 +56,9 @@ const mini_estatisticas = ref([
 ]);
 
 const headers = [
-  { title: "Encarregado", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
-  { title: "Data Nascimento", key: "dataNascimento", sortable: true },
-  { title: "Distrito", key: "distritoNascimento", sortable: true },
-  { title: "Sector de Trabalho", key: "sectorTrabalho", sortable: true },
+  { title: "Departamento", key: "departamento", sortable: true },
+  { title: "Cargo", key: "cargo", sortable: true },
   { title: "Sexo", key: "sexo", sortable: true },
   { title: "Nº documento", key: "bilheteIdentificacao", sortable: true },
   { title: "Nº Telefone", key: "numeroTelefonePrincipal", sortable: true },
@@ -137,7 +135,9 @@ const fetchFuncionarios = async () => {
       distritoNascimento: funcionario.distritoNascimento,
       provinciaNascimento: funcionario.provinciaNascimento,
       bilheteIdentificacao: funcionario.bilheteIdentificacao,
-      sectorTrabalho: funcionario.sectorTrabalho,
+      departamento: funcionario.departamento,
+      cargo: funcionario.cargo,
+      areaFormacao: funcionario.areaFormacao,
       numeroTelefonePrincipal: funcionario.numeroTelefonePrincipal,
       sexo: funcionario.sexo,
       estado: funcionario.estado,
@@ -152,6 +152,9 @@ const fetchFuncionarios = async () => {
 const filterFuncionarios = () => {
   filteredFuncionarios.value = alunos.value.filter((funcionario) => {
     const matchesSearch =
+    funcionario.areaFormacao
+        .toLowerCase()
+        .includes(searchQuery.value.toLowerCase()) ||
       funcionario.nome
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
@@ -167,7 +170,7 @@ const filterFuncionarios = () => {
       funcionario.estado
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase()) ||
-      funcionario.departamentos
+      funcionario.departamento
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase());
 
@@ -381,7 +384,7 @@ atualizarDados();
           <IconBtn
             size="small"
             :to="{
-              name: 'utilizadores-encarregados-detalhes-id',
+              name: 'utilizadores-funcionarios-detalhes-id',
               params: { id: item.id },
             }"
           >

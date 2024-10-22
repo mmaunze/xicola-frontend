@@ -1,6 +1,6 @@
 <script setup>
-import EditarEncarregado from "@/views/utilizadores/estudantes/EditarAluno.vue";
-import CadastrarEncarregado from "@/views/utilizadores/professores/forms/CadastrarProfessor.vue";
+import CadastrarEncarregado from "@/views/utilizadores/encarregados/forms/CadastrarEncarregado.vue";
+import EditarEncarregado from "@/views/utilizadores/estudantes/forms/EditarAluno.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -56,7 +56,6 @@ const mini_estatisticas = ref([
 ]);
 
 const headers = [
-  { title: "Encarregado", key: "id", sortable: true },
   { title: "Nome Completo", key: "nome", sortable: true },
   { title: "Data Nascimento", key: "dataNascimento", sortable: true },
   { title: "Distrito", key: "distritoNascimento", sortable: true },
@@ -310,8 +309,8 @@ atualizarDados();
           <VCol cols="12" sm="4">
             <VAutocomplete
               v-model="selectedDistrito"
-              label="Seleccionar o distrito de nascenca"
-              placeholder="Seleccionar o distrito de nascenca"
+              label="Seleccionar o distrito de nascimento"
+              placeholder="Seleccionar o distrito de nascimento"
               :items="distritos"
               clearable
               clear-icon="ri-close-line"
