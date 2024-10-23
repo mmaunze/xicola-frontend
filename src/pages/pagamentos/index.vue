@@ -207,12 +207,6 @@ const totalMatriculas = async () => {
   }
 };
 
-const registarPagamento = () => {
-  $router.push({
-    name: "utilizadores",
-  });
-};
-
 const updateOptions = (options) => {
   page.value = options.page;
   sortBy.value = options.sortBy[0]?.key;
@@ -348,12 +342,23 @@ atualizarDados();
         <template #item.actions="{ item }">
           <IconBtn
             size="small"
+            color="info"
             :to="{
-              name: 'utilizadores-encarregados-detalhes-id',
+              name: 'pagamentos-detalhes-id',
               params: { id: item.id },
             }"
           >
             <VIcon icon="ri-eye-line" />
+          </IconBtn>
+          <IconBtn
+            size="small"
+            color="warning"
+            :to="{
+              name: 'pagamentos-pagamento-editar-id',
+              params: { id: item.id },
+            }"
+          >
+            <VIcon icon="ri-edit-line" />
           </IconBtn>
         </template>
       </VDataTableServer>

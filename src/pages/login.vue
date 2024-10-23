@@ -25,10 +25,7 @@ const form = ref({
 });
 
 const isPasswordVisible = ref(false);
-const authV2LoginMask = useGenerateImageVariant(
-  authV2LoginMaskLight,
-  authV2LoginMaskDark
-);
+const authV2LoginMask = useGenerateImageVariant(authV2LoginMaskLight, authV2LoginMaskDark);
 const authV2LoginIllustration = useGenerateImageVariant(
   authV2LoginIllustrationLight,
   authV2LoginIllustrationDark,
@@ -64,61 +61,56 @@ const login = async () => {
       username: response.username,
       email: response.email,
       role: response.roles[0], 
-      // Supondo que roles seja uma lista
     };
 
     localStorage.setItem("userData", JSON.stringify(userData));
     router.push("/");
   } catch (error) {
     console.error("Erro ao efetuar login:", error);
-    errorMessage.value =
-      "Falha no login. Verifique suas credenciais e tente novamente."; // Define a mensagem de erro
+    
+    // Verifica se a resposta do erro tem uma estrutura esperada
+    if (error.response) {
+      // O servidor respondeu com um código de status que não está na faixa de 2xx
+      if (error.response.status === 401) {
+        errorMessage.value = "Erro de credenciais. Verifique seu usuário e senha.";
+      } else if (error.response.status === 500) {
+        errorMessage.value = "Erro de credenciais. Verifique seu usuário e senha.";
+      } else {
+        errorMessage.value = "Erro desconhecido. Por favor, tente novamente.";
+      }
+    } else if (error.request) {
+      // A requisição foi feita, mas não houve resposta
+      errorMessage.value = "Não foi possível conectar ao servidor. Verifique sua conexão.";
+    } else {
+      // Alguma coisa deu errado ao configurar a requisição
+      errorMessage.value = "Erro ao tentar realizar a requisição. Tente novamente.";
+    }
   }
 };
-// Função de login
 </script>
 
 <template>
   <a href="javascript:void(0)">
     <div class="app-logo auth-logo">
       <VNodeRenderer :nodes="themeConfig.app.logo" />
-      <h1 class="app-logo-title">
-        {{ themeConfig.app.title }}
-      </h1>
+      <h1 class="app-logo-title">{{ themeConfig.app.title }}</h1>
     </div>
   </a>
 
   <VRow no-gutters class="auth-wrapper">
-    <VCol
-      md="8"
-      class="d-none d-md-flex align-center justify-center position-relative"
-    >
+    <VCol md="8" class="d-none d-md-flex align-center justify-center position-relative">
       <div class="d-flex align-center justify-center pa-10">
-        <img
-          :src="authV2LoginIllustration"
-          class="auth-illustration w-100"
-          alt="auth-illustration"
-        />
+        <img :src="authV2LoginIllustration" class="auth-illustration w-100" alt="auth-illustration" />
       </div>
-      <VImg
-        :src="authV2LoginMask"
-        class="d-none d-md-flex auth-footer-mask"
-        alt="auth-mask"
-      />
+      <VImg :src="authV2LoginMask" class="d-none d-md-flex auth-footer-mask" alt="auth-mask" />
     </VCol>
-    <VCol
-      cols="12"
-      md="4"
-      class="auth-card-v2 d-flex align-center justify-center"
-      style="background-color: rgb(var(--v-theme-surface));"
-    >
+    <VCol cols="12" md="4" class="auth-card-v2 d-flex align-center justify-center" style="background-color: rgb(var(--v-theme-surface));">
       <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-5 pa-lg-7">
         <VCardText>
           <h4 class="text-h4 mb-1">
-          📚 Bem vindo a
+            📚 Bem vindo a
             <span class="text-capitalize">{{ themeConfig.app.title }}...</span>
           </h4>
-
           <p class="mb-0">Por favor, insira suas credenciais para continuar</p>
         </VCardText>
 
@@ -126,17 +118,12 @@ const login = async () => {
           <VForm @submit.prevent="login">
             <VRow>
               <VCol cols="12">
-                <VAlert
-                  v-if="errorMessage"
-                  type="error"
-                  dismissible
-                  v-model="errorMessage"
-                >
+                <VAlert v-if="errorMessage" type="error" dismissible v-model="errorMessage">
                   {{ errorMessage }}
                 </VAlert>
               </VCol>
 
-              <!-- email -->
+              <!-- username -->
               <VCol cols="12">
                 <VTextField
                   v-model="form.username"
@@ -154,21 +141,14 @@ const login = async () => {
                   label="Password"
                   placeholder="············"
                   :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="
-                    isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'
-                  "
+                  :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
 
                 <!-- remember me checkbox -->
-                <div
-                  class="d-flex align-center justify-space-between flex-wrap my-6 gap-x-2"
-                >
+                <div class="d-flex align-center justify-space-between flex-wrap my-6 gap-x-2">
                   <VCheckbox v-model="form.remember" label="Remember me" />
-
-                  <RouterLink class="text-primary" to="forgot-password">
-                    recuperar senha
-                  </RouterLink>
+                  <RouterLink class="text-primary" to="forgot-password">recuperar senha</RouterLink>
                 </div>
 
                 <!-- login button -->
@@ -177,13 +157,8 @@ const login = async () => {
 
               <!-- create account -->
               <VCol cols="12" class="text-body-1 text-center">
-                <span class="d-inline-block"> Nao esta cadastrado ? </span>
-                <RouterLink
-                  to="register"
-                  class="text-primary ms-1 d-inline-block text-body-1"
-                >
-                  Criar uma conta
-                </RouterLink>
+                <span class="d-inline-block"> Não está cadastrado? </span>
+                <RouterLink to="register" class="text-primary ms-1 d-inline-block text-body-1">Criar uma conta</RouterLink>
               </VCol>
 
               <VCol cols="12" class="d-flex align-center">
@@ -192,7 +167,6 @@ const login = async () => {
                 <VDivider />
               </VCol>
 
-              
               <VCol cols="12" class="text-center">
                 <AuthProvider />
               </VCol>

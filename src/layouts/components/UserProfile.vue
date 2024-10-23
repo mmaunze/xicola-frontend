@@ -1,44 +1,46 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import foto_perfil from '@images/avatars/avatar-8.png'
-
-const router = useRouter()
+import avatar1 from '@images/avatars/avatar-1.png'
 
 const userProfileList = [
   { type: 'divider' },
   {
     type: 'navItem',
     icon: 'ri-user-line',
-    title: 'Minha conta',
+    title: 'Profile',
     href: '#',
   },
   {
     type: 'navItem',
     icon: 'ri-settings-4-line',
-    title: 'Ajustes',
+    title: 'Settings',
     href: '#',
   },
+  {
+    type: 'navItem',
+    icon: 'ri-file-text-line',
+    title: 'Billing Plan',
+    href: '#',
+    chipsProps: {
+      color: 'error',
+      text: '4',
+      size: 'small',
+    },
+  },
   { type: 'divider' },
-  
+  {
+    type: 'navItem',
+    icon: 'ri-money-dollar-circle-line',
+    title: 'Pricing',
+    href: '#',
+  },
   {
     type: 'navItem',
     icon: 'ri-question-line',
-    title: 'Ajuda',
+    title: 'FAQ',
     href: '#',
   },
 ]
-
-let userData = useCookie('userData')
-
-const logout = async () => {
-  useCookie.value = null
-  userData = null 
-  localStorage = null
-  await router.push('/login')
-}
-
-const storedUserData = JSON.parse(localStorage.getItem("userData"));
-
 </script>
 
 <template>
@@ -55,8 +57,9 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
       class="cursor-pointer"
       size="38"
     >
-      <VImg :src="foto_perfil" />
+      <VImg :src="avatar1" />
 
+      <!-- SECTION Menu -->
       <VMenu
         activator="parent"
         width="230"
@@ -67,15 +70,15 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
           <VListItem class="px-4">
             <div class="d-flex gap-x-2 align-center">
               <VAvatar>
-                <VImg :src="foto_perfil" />
+                <VImg :src="avatar1" />
               </VAvatar>
 
               <div>
                 <div class="text-body-2 font-weight-medium text-high-emphasis">
-                  {{storedUserData.nome}}
+                  John Doe
                 </div>
                 <div class="text-capitalize text-caption text-disabled">
-                  {{  storedUserData.email }}
+                  Admin
                 </div>
               </div>
             </div>
@@ -123,15 +126,15 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
                 color="error"
                 size="small"
                 append-icon="ri-logout-box-r-line"
-                @click="logout"
+                :to="{ name: 'login' }"
               >
-                Sair
+                Logout
               </VBtn>
             </VListItem>
           </PerfectScrollbar>
         </VList>
       </VMenu>
-    
+      <!-- !SECTION -->
     </VAvatar>
   </VBadge>
 </template>
