@@ -1,7 +1,4 @@
 <script setup>
-import CadastrarEncarregado from "@/views/utilizadores/encarregados/forms/CadastrarEncarregado.vue";
-import EditarEncarregado from "@/views/utilizadores/estudantes/forms/EditarAluno.vue";
-
 const searchQuery = ref("");
 const selectedMetodoPagamento = ref(null);
 const selectedTipoPagamento = ref(null);
@@ -12,6 +9,7 @@ const page = ref(1);
 const sortBy = ref();
 const orderBy = ref();
 const selectedRows = ref([]);
+
 const pagamentos = ref([]);
 const metodos_pagamento = ref([]);
 const tipos_pagamento = ref([]);
@@ -21,8 +19,6 @@ const total_matriculas = ref(0);
 const total_mensalidades = ref(0);
 const total_multas = ref(0);
 
-const isCadastrarEncarregadoVisible = ref(false);
-const isEditarEncarregadoVisible = ref(false);
 
 const mini_estatisticas = ref([
   {
@@ -187,9 +183,9 @@ const filterPagamentos = () => {
   });
 };
 
-const totalEncarregados = async () => {
+const totalPagamentos = async () => {
   try {
-    const res = await $api("/encarregados-educacao/totais", {
+    const res = await $api("/pagamentos/totais", {
       method: "GET",
     });
 
@@ -199,17 +195,23 @@ const totalEncarregados = async () => {
   }
 };
 
-const cadastrarEncarregado = async (userData) => {
-  await $api("/encarregados-educacao/cadastrar", {
-    method: "POST",
-    body: userData,
-  });
+const totalMatriculas = async () => {
+  try {
+    const res = await $api(`/pagamentos/tipo/Pagamento de Matrícula`, {
+      method: "GET",
+    });
 
-  fetchPagamentos();
+    total_matriculas.value = res;
+  } catch (err) {
+    console.error("Erro ao buscar encarregados:", err);
+  }
 };
 
-
-
+const registarPagamento = () => {
+  $router.push({
+    name: "utilizadores",
+  });
+};
 
 const updateOptions = (options) => {
   page.value = options.page;
@@ -226,6 +228,8 @@ const atualizarDados = () => {
   fetchPagamentos();
   fetchTiposPagamento();
   fetchMetodosPagamento();
+  totalPagamentos();
+  totalMatriculas();
 };
 
 atualizarDados();
@@ -323,7 +327,7 @@ atualizarDados();
             />
           </div>
 
-          <VBtn @click="isCadastrarEncarregadoVisible = true"
+          <VBtn @click="registarPagamento()"
             >Cadastrar Encarregado</VBtn
           >
         </div>
@@ -351,26 +355,9 @@ atualizarDados();
           >
             <VIcon icon="ri-eye-line" />
           </IconBtn>
-
-          <VBtn
-            icon="ri-edit-2-line"
-            :icon-color="success"
-            variant="plain"
-            @click="isEditarEncarregadoVisible = true"
-          />
         </template>
       </VDataTableServer>
     </VCard>
-
-    <CadastrarEncarregado
-      v-model:isDrawerOpen="isCadastrarEncarregadoVisible"
-      @user-data="cadastrarEncarregado"
-    />
-
-    <EditarEncarregado
-      v-model:isDrawerOpen="isCadastrarEncarregadoVisible"
-      @user-data="cadastrarEncarregado"
-    />
   </section>
 </template>
 
