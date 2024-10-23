@@ -28,7 +28,7 @@ const userProfileList = [
   },
 ]
 
-const userData = useCookie('userData')
+let userData = useCookie('userData')
 
 const logout = async () => {
   useCookie.value = null

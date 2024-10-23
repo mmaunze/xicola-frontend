@@ -1,12 +1,5 @@
 <script setup>
-import ProgressoProvas from "@/views/inicio/ProgressoProvas.vue";
-import Pessoal from "@/views/inicio/Pessoal.vue";
-import AcademyUpcomingWebinar from "@/views/inicio/AcademyUpcomingWebinar.vue";
-import MelhorAproveitamento from "@/views/inicio/MelhorAproveitamento.vue";
-import MelhoresAlunos from "@/views/inicio/MelhoresAlunos.vue";
-import customCheck from "@images/svg/check.svg";
-import customLaptop from "@images/svg/laptop.svg";
-import customLightbulb from "@images/svg/lightbulb.svg";
+
 
 const donutChartColors = {
   donut: {
