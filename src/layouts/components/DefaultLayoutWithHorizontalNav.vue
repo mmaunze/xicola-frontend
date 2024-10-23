@@ -2,7 +2,6 @@
 import navItems from '@/navigation/horizontal'
 import { themeConfig } from '@themeConfig'
 
-// Components
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
@@ -13,7 +12,7 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 
 <template>
   <HorizontalNavLayout :nav-items="navItems">
-    <!-- 👉 navbar -->
+ 
     <template #navbar>
       <RouterLink
         to="/"
@@ -36,16 +35,15 @@ import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
       <UserProfile />
     </template>
 
-    <!-- 👉 Pages -->
+    
     <slot />
 
-    <!-- 👉 Footer -->
+
     <template #footer>
       <Footer />
     </template>
 
-    <!-- 👉 Customizer -->
-    <!-- <TheCustomizer /> -->
+
   </HorizontalNavLayout>
 </template>
 

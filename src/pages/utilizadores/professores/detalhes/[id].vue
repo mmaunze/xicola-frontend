@@ -1,30 +1,27 @@
 <script setup>
 import Sobre from "@/views/utilizadores/professores/detalhes/Sobre.vue";
 
-const route = useRoute("utilizadores-professores-detalhes-id"); 
+const route = useRoute("utilizadores-professores-detalhes-id");
 const professorTab = ref(null);
-const professorData = ref(null); 
+const professorData = ref(null);
 
 const tabs = [
   {
     icon: "ri-book-3-line",
     title: "Disciplinas",
-    content:
-      "Informações ",
+    content: "Informações ",
   },
 
   {
     icon: "ri-group-line",
     title: "Turmas",
-    content:
-      "Informações ",
+    content: "Informações ",
   },
 
   {
     icon: "ri-book-line",
     title: "Aulas",
-    content:
-      "",
+    content: "",
   },
 
   {
@@ -35,17 +32,14 @@ const tabs = [
   {
     icon: "ri-award-line",
     title: "Actividades",
-    content:
-      "",
+    content: "",
   },
   {
     icon: "ri-archive-2-line",
     title: "Documentos",
-    content:
-      "",
-  }
+    content: "",
+  },
 ];
-
 
 const fetchProfessor = async () => {
   try {
@@ -83,19 +77,16 @@ const fetchProfessor = async () => {
   }
 };
 
-
 onMounted(() => {
   fetchProfessor();
 });
 </script>
 <template>
   <VRow v-if="professorData">
-   
     <VCol cols="12" md="5" lg="4">
-      <Sobre :user-data="professorData" />
+      <Sobre :professorData="professorData" />
     </VCol>
 
-    
     <VCol cols="12" md="7" lg="8">
       <VTabs v-model="professorTab" class="v-tabs-pill">
         <VTab v-for="tab in tabs" :key="tab.icon">
@@ -104,12 +95,7 @@ onMounted(() => {
         </VTab>
       </VTabs>
 
-   
-      <VWindow
-        v-model="professorTab"
-        class="mt-6 enable-tab-transition"
-        :touch
-      >
+      <VWindow v-model="professorTab" class="mt-6 enable-tab-transition" :touch>
         <VWindowItem>
           <Aulas />
         </VWindowItem>
@@ -136,7 +122,6 @@ onMounted(() => {
       </VWindow>
     </VCol>
   </VRow>
-
 
   <div v-else>
     <VAlert type="error" variant="tonal">

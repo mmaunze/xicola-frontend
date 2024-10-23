@@ -1,5 +1,5 @@
 <script setup>
-import navItems from '@/navigation/vertical'
+import navItems from '@/navigation/vertical/utilizadores'
 import { useConfigStore } from '@core/stores/config'
 import { themeConfig } from '@themeConfig'
 

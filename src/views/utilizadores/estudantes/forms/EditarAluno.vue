@@ -1,17 +1,8 @@
 <script setup>
-const token = useCookie("accessToken").value;
 
 const distritos = ref([]);
 const selectedDistrito = ref(null);
 
-const opcoesEstado = [
-  "Matriculado",
-  "Transferido",
-  "Graduado",
-  "Suspenso",
-  "Expulso",
-  "Desistente",
-];
 const opcoesReligiao = [
   "Cristã",
   "Católica",
@@ -54,6 +45,7 @@ const props = defineProps({
       numeroTelefonePrincipal: "",
       sexo: "",
       estado: "",
+      email: "",
     }),
   },
   isDialogVisible: {
@@ -91,12 +83,7 @@ const buscarDistritos = async () => {
   try {
     const res = await $api("/distritos", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // Passar o token corretamente
-      },
     });
-
-    console.log("Response distritos:", res); // Adicione este log
 
     distritos.value = res.map((distrito) => ({
       id: distrito.id,
@@ -106,7 +93,7 @@ const buscarDistritos = async () => {
 
     distritos.value = distritos.value.map((distrito) => ({
       title: distrito.nome,
-      value: distrito.id, // Certifique-se de que o id e nome estão corretos
+      value: distrito.id, 
     }));
   } catch (err) {
     console.error("Erro ao buscar distritos:", err);
@@ -123,7 +110,7 @@ buscarDistritos();
     @update:model-value="dialogVisibleUpdate"
   >
     <VCard class="pa-sm-11 pa-3">
-      <!-- Dialog close button -->
+    
       <DialogCloseBtn variant="text" size="default" @click="onFormReset" />
 
       <VCardText class="pt-5">
@@ -151,8 +138,8 @@ buscarDistritos();
               <VTextField
                 v-model="userData.dataNascimento"
                 label="Data de Nascimento"
-                type="date"
-                placeholder="Ex: 01/01/2000"
+                type="datepicker"
+                placeholder="Ex: 2020-12-29"
               />
             </VCol>
 
@@ -160,7 +147,7 @@ buscarDistritos();
             <VCol cols="12" md="6">
               <VSelect
                 v-model="userData.sexo"
-                :items="['M', 'F']"
+                :items="['Masculino', 'Feminino']"
                 label="Sexo"
                 placeholder="Selecione o sexo"
               />
@@ -226,7 +213,7 @@ buscarDistritos();
               />
             </VCol>
 
-            <!-- Número de Telefone -->
+            
             <VCol cols="12" md="6">
               <VTextField
                 v-model="userData.numeroTelefonePrincipal"
@@ -235,7 +222,18 @@ buscarDistritos();
               />
             </VCol>
 
-            <!-- Endereço -->
+
+          
+            <VCol cols="12" md="6">
+              <VTextField
+                v-model="userData.email"
+                label="email"
+                type="email"
+                placeholder="email@exemplo.com"
+              />
+            </VCol>
+
+           
             <VCol cols="12">
               <VTextField
                 v-model="userData.endereco"
@@ -245,7 +243,7 @@ buscarDistritos();
             </VCol>
 
             <!-- Escola Anterior -->
-            <VCol cols="12" md="6">
+            <VCol cols="12">
               <VTextField
                 v-model="userData.escolaAnterior"
                 label="Escola Anterior"
@@ -253,15 +251,7 @@ buscarDistritos();
               />
             </VCol>
 
-            <!-- Estado -->
-            <VCol cols="12" md="6">
-              <VSelect
-                v-model="userData.estado"
-                :items="opcoesEstado"
-                label="Estado"
-                placeholder="Estado actual"
-              />
-            </VCol>
+      
 
             <!-- Submit and Cancel -->
             <VCol cols="12" class="d-flex flex-wrap justify-center gap-4">

@@ -1,6 +1,6 @@
 <script setup>
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import avatar1 from '@images/avatars/avatar-1.png'
+import foto_perfil from '@images/avatars/avatar-8.png'
 
 const router = useRouter()
 
@@ -9,37 +9,21 @@ const userProfileList = [
   {
     type: 'navItem',
     icon: 'ri-user-line',
-    title: 'Profile',
+    title: 'Minha conta',
     href: '#',
   },
   {
     type: 'navItem',
     icon: 'ri-settings-4-line',
-    title: 'Settings',
+    title: 'Ajustes',
     href: '#',
-  },
-  {
-    type: 'navItem',
-    icon: 'ri-file-text-line',
-    title: 'Billing Plan',
-    href: '#',
-    chipsProps: {
-      color: 'error',
-      text: '4',
-      size: 'small',
-    },
   },
   { type: 'divider' },
-  {
-    type: 'navItem',
-    icon: 'ri-money-dollar-circle-line',
-    title: 'Pricing',
-    href: '#',
-  },
+  
   {
     type: 'navItem',
     icon: 'ri-question-line',
-    title: 'FAQ',
+    title: 'Ajuda',
     href: '#',
   },
 ]
@@ -47,14 +31,9 @@ const userProfileList = [
 const userData = useCookie('userData')
 
 const logout = async () => {
-
-  // Remove "accessToken" from cookie
-  useCookie('accessToken').value = null
- 
-  userData.value = null
-
-  // Redirect to login page
-
+  useCookie.value = null
+  userData = null 
+  localStorage = null
   await router.push('/login')
 }
 
@@ -76,9 +55,8 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
       class="cursor-pointer"
       size="38"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="foto_perfil" />
 
-      <!-- SECTION Menu -->
       <VMenu
         activator="parent"
         width="230"
@@ -89,7 +67,7 @@ const storedUserData = JSON.parse(localStorage.getItem("userData"));
           <VListItem class="px-4">
             <div class="d-flex gap-x-2 align-center">
               <VAvatar>
-                <VImg :src="avatar1" />
+                <VImg :src="foto_perfil" />
               </VAvatar>
 
               <div>

@@ -2,14 +2,13 @@
 import EditarEstudante from "../forms/EditarAluno.vue";
 
 const props = defineProps({
-  userData: {
+  alunoData: {
     type: Object,
     required: true,
   },
 });
 
-const isUserInfoEditDialogVisible = ref(false);
-const isUpgradePlanDialogVisible = ref(false);
+const isEditarAlunoVisible = ref(false);
 
 const resolveEstadoVariant = (estado) => {
   if (estado === "Matriculado")
@@ -47,33 +46,33 @@ const resolveEstadoVariant = (estado) => {
 
 <template>
   <VRow>
-    <!-- SECTION User Details -->
+   
     <VCol cols="12">
-      <VCard v-if="props.userData">
+      <VCard v-if="props.alunoData">
         <VCardText class="text-center pt-12 pb-6">
-          <!-- 👉 Avatar -->
+         
           <VAvatar
             rounded="lg"
             :size="120"
-            :color="!props.userData.avatar ? 'primary' : undefined"
-            :variant="!props.userData.avatar ? 'tonal' : undefined"
+            :color="!props.alunoData.avatar ? 'primary' : undefined"
+            :variant="!props.alunoData.avatar ? 'tonal' : undefined"
           >
-            <VImg v-if="props.userData.avatar" :src="props.userData.avatar" />
+            <VImg v-if="props.alunoData.avatar" :src="props.alunoData.avatar" />
             <span v-else class="text-5xl font-weight-medium">
-              {{ avatarText(props.userData.nomeCompleto) }}
+              {{ avatarText(props.alunoData.nomeCompleto) }}
             </span>
           </VAvatar>
 
           <h5 class="text-h5 mt-4">
-            {{ props.userData.nomeCompleto }}
+            {{ props.alunoData.nomeCompleto }}
           </h5>
 
           <VChip
-            :color="resolveEstadoVariant(props.userData.estado).color"
+            :color="resolveEstadoVariant(props.alunoData.estado).color"
             size="small"
             class="text-capitalize mt-4"
           >
-            {{ props.userData.estado }}
+            {{ props.alunoData.estado }}
           </VChip>
         </VCardText>
 
@@ -82,13 +81,13 @@ const resolveEstadoVariant = (estado) => {
 
           <VDivider class="my-4" />
 
-          <!-- 👉 User Details list -->
+    
           <VList class="card-list">
             <VListItem>
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Data de Nascimento : </span>
                 <span class="text-body-1">{{
-                  props.userData.dataNascimento
+                  props.alunoData.dataNascimento
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -99,7 +98,7 @@ const resolveEstadoVariant = (estado) => {
                   >Província de Nascimento :
                 </span>
                 <span class="text-body-1">{{
-                  props.userData.provinciaNascimento
+                  props.alunoData.provinciaNascimento
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -110,7 +109,7 @@ const resolveEstadoVariant = (estado) => {
                   >Distrito de Nascimento :
                 </span>
                 <span class="text-body-1">{{
-                  props.userData.distritoNascimento
+                  props.alunoData.distritoNascimento
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -119,7 +118,7 @@ const resolveEstadoVariant = (estado) => {
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Data de Registo : </span>
                 <span class="text-body-1">{{
-                  props.userData.dataRegisto
+                  props.alunoData.dataRegisto
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -128,7 +127,7 @@ const resolveEstadoVariant = (estado) => {
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">BI : </span>
                 <span class="text-body-1">{{
-                  props.userData.bilheteIdentificacao
+                  props.alunoData.bilheteIdentificacao
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -137,29 +136,36 @@ const resolveEstadoVariant = (estado) => {
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Telefone : </span>
                 <span class="text-body-1">{{
-                  props.userData.numeroTelefonePrincipal
+                  props.alunoData.numeroTelefonePrincipal
                 }}</span>
               </VListItemTitle>
             </VListItem>
 
             <VListItem>
               <VListItemTitle class="text-sm">
+                <span class="font-weight-medium">Email : </span>
+                <span class="text-body-1">{{ props.alunoData.email }}</span>
+              </VListItemTitle>
+            </VListItem>
+
+            <VListItem>
+              <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Nome do Pai : </span>
-                <span class="text-body-1">{{ props.userData.nomeDoPai }}</span>
+                <span class="text-body-1">{{ props.alunoData.nomeDoPai }}</span>
               </VListItemTitle>
             </VListItem>
 
             <VListItem>
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Nome da Mãe : </span>
-                <span class="text-body-1">{{ props.userData.nomeDaMae }}</span>
+                <span class="text-body-1">{{ props.alunoData.nomeDaMae }}</span>
               </VListItemTitle>
             </VListItem>
 
             <VListItem>
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Religião : </span>
-                <span class="text-body-1">{{ props.userData.religiao }}</span>
+                <span class="text-body-1">{{ props.alunoData.religiao }}</span>
               </VListItemTitle>
             </VListItem>
 
@@ -167,7 +173,7 @@ const resolveEstadoVariant = (estado) => {
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Grupo Sanguíneo : </span>
                 <span class="text-body-1">{{
-                  props.userData.grupoSanguineo
+                  props.alunoData.grupoSanguineo
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -175,7 +181,7 @@ const resolveEstadoVariant = (estado) => {
             <VListItem>
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Morada : </span>
-                <span class="text-body-1">{{ props.userData.endereco }}</span>
+                <span class="text-body-1">{{ props.alunoData.endereco }}</span>
               </VListItemTitle>
             </VListItem>
 
@@ -183,7 +189,7 @@ const resolveEstadoVariant = (estado) => {
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Escola Anterior : </span>
                 <span class="text-body-1">{{
-                  props.userData.escolaAnterior
+                  props.alunoData.escolaAnterior
                 }}</span>
               </VListItemTitle>
             </VListItem>
@@ -191,18 +197,18 @@ const resolveEstadoVariant = (estado) => {
             <VListItem>
               <VListItemTitle class="text-sm">
                 <span class="font-weight-medium">Estado : </span>
-                <span class="text-body-1">{{ props.userData.estado }}</span>
+                <span class="text-body-1">{{ props.alunoData.estado }}</span>
               </VListItemTitle>
             </VListItem>
           </VList>
         </VCardText>
 
-        <!-- 👉 Edit and Suspend button -->
+     
         <VCardText class="d-flex justify-center">
           <VBtn
             variant="elevated"
             class="me-4"
-            @click="isUserInfoEditDialogVisible = true"
+            @click="isEditarAlunoVisible = true"
           >
             Editar
           </VBtn>
@@ -210,17 +216,15 @@ const resolveEstadoVariant = (estado) => {
         </VCardText>
       </VCard>
     </VCol>
-    <!-- !SECTION -->
+
   </VRow>
 
-  <!-- 👉 Edit user info dialog -->
+ 
   <EditarEstudante
-    v-model:isDialogVisible="isUserInfoEditDialogVisible"
-    :user-data="props.userData"
+    v-model:isDialogVisible="isEditarAlunoVisible"
+    :user-data="props.alunoData"
   />
 
-  <!-- 👉 Upgrade plan dialog -->
-  <UserUpgradePlanDialog v-model:isDialogVisible="isUpgradePlanDialogVisible" />
 </template>
 
 <style lang="scss" scoped>

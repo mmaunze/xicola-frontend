@@ -1,5 +1,7 @@
 <script setup>
 import CadastrarProfessor from "@/views/utilizadores/professores/forms/CadastrarProfessor.vue";
+import EditarProfessor from "@/views/utilizadores/professores/forms/EditarProfessor.vue";
+
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -25,6 +27,7 @@ const total_suspensos = ref(0);
 const total_reformados = ref(0);
 
 const isCadastrarProfessorVisible = ref(false);
+const isEditarProfessorVisible= ref(false);
 
 const mini_estatisticas = ref([
   {
@@ -434,6 +437,8 @@ atualizarDados();
       v-model:isDrawerOpen="isCadastrarProfessorVisible"
       @user-data="cadastrarProfessor"
     />
+
+    
   </section>
 </template>
 

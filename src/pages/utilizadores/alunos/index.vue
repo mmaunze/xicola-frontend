@@ -1,6 +1,6 @@
 <script setup>
-import CadastrarEstudante from "@/views/utilizadores/estudantes/forms/CadastrarAluno.vue";
-import EditarEstudante from "@/views/utilizadores/estudantes/forms/EditarAluno.vue";
+import CadastrarAluno from "@/views/utilizadores/estudantes/forms/CadastrarAluno.vue";
+import EditarAluno from "@/views/utilizadores/estudantes/forms/EditarAluno.vue";
 
 const searchQuery = ref("");
 const selectedDistrito = ref(null);
@@ -304,7 +304,7 @@ atualizarDados();
 </script>
 
 <template>
-  <section>
+  <section v-if="alunos">
     <div class="d-flex mb-6">
       <VRow>
         <template v-for="data in mini_estatisticas" :key="id">
@@ -414,6 +414,7 @@ atualizarDados();
         <template #item.actions="{ item }">
           <IconBtn
             size="small"
+            :icon-color="warning"
             :to="{
               name: 'utilizadores-alunos-detalhes-id',
               params: { id: item.id },
@@ -423,24 +424,29 @@ atualizarDados();
           </IconBtn>
 
           <VBtn
-            icon="ri-edit-2-line"
-            :icon-color="success"
+            icon="ri-edit-fill"
+            :icon-color="primary"
             variant="plain"
             @click="isEditarAlunoVisible = true"
           />
         </template>
       </VDataTableServer>
     </VCard>
-    <!-- Cadastrar estudante modal -->
-    <CadastrarEstudante
+  
+    <CadastrarAluno
       v-model:isDrawerOpen="isCadastrarAlunoVisible"
       @user-data="cadastrarAluno"
     />
 
-    <EditarEstudante
+    <EditarAluno
       v-model:isDrawerOpen="isCadastrarAlunoVisible"
       @user-data="cadastrarAluno"
     />
+  </section>
+  <section v-else>
+    <VCard>
+      <VCardTitle>Sem alunos</VCardTitle>
+    </VCard>
   </section>
 </template>
 
